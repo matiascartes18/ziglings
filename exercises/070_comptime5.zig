@@ -1,17 +1,17 @@
 //
-// Being able to pass types to functions at compile time lets us
-// generate code that works with multiple types. But it doesn't
-// help us pass VALUES of different types to a function.
+// Poder pasar tipos a funciones en tiempo de compilación nos permite
+// generar código que funciona con múltiples tipos. Pero no nos
+// ayuda a pasar VALORES de diferentes tipos a una función.
 //
-// For that, we have the 'anytype' placeholder, which tells Zig
-// to infer the actual type of a parameter at compile time.
+// Para eso, tenemos el marcador de posición 'anytype', que le dice a Zig
+// que infiera el tipo real de un parámetro en tiempo de compilación.
 //
 //     fn foo(thing: anytype) void { ... }
 //
-// Then we can use builtins such as @TypeOf(), @typeInfo(),
-// @typeName(), @hasDecl(), and @hasField() to determine more
-// about the type that has been passed in. All of this logic will
-// be performed entirely at compile time.
+// Luego podemos usar funciones incorporadas como @TypeOf(), @typeInfo(),
+// @typeName(), @hasDecl() y @hasField() para determinar más
+// acerca del tipo que se ha pasado. Toda esta lógica se
+// realizará completamente en tiempo de compilación.
 //
 const print = @import("std").debug.print;
 
@@ -106,38 +106,37 @@ pub fn main() void {
     print("ducky3: {}\n", .{isADuck(ducky3)});
 }
 
-// This function has a single parameter which is inferred at
-// compile time. It uses builtins @TypeOf() and @hasDecl() to
-// perform duck typing ("if it walks like a duck and it quacks
-// like a duck, then it must be a duck") to determine if the type
-// is a "duck".
+// Esta función tiene un solo parámetro que se infiere en
+// tiempo de compilación. Utiliza las funciones incorporadas @TypeOf() y @hasDecl() para
+// realizar tipado de pato ("si camina como un pato y grazna
+// como un pato, entonces debe ser un pato") para determinar si el tipo
+// es un "pato".
 fn isADuck(possible_duck: anytype) bool {
-    // We'll use @hasDecl() to determine if the type has
-    // everything needed to be a "duck".
+    // Usaremos @hasDecl() para determinar si el tipo tiene
+    // todo lo necesario para ser un "pato".
     //
-    // In this example, 'has_increment' will be true if type Foo
-    // has an increment() method:
+    // En este ejemplo, 'has_increment' será verdadero si el tipo Foo
+    // tiene un método increment():
     //
     //     const has_increment = @hasDecl(Foo, "increment");
     //
-    // Please make sure MyType has both waddle() and quack()
-    // methods:
+    // Por favor, asegúrate de que MyType tenga tanto los métodos waddle() como quack():
     const MyType = @TypeOf(possible_duck);
-    const walks_like_duck = ???;
-    const quacks_like_duck = ???;
+    const walks_like_duck = @hasDecl(MyType, "waddle");
+    const quacks_like_duck = @hasDecl(MyType, "quack");
 
     const is_duck = walks_like_duck and quacks_like_duck;
 
     if (is_duck) {
-        // We also call the quack() method here to prove that Zig
-        // allows us to perform duck actions on anything
-        // sufficiently duck-like.
+        // También llamamos al método quack() aquí para demostrar que Zig
+        // nos permite realizar acciones de pato en cualquier cosa
+        // suficientemente parecida a un pato.
         //
-        // Because all of the checking and inference is performed
-        // at compile time, we still have complete type safety:
-        // attempting to call the quack() method on a struct that
-        // doesn't have it (like Duct) would result in a compile
-        // error, not a runtime panic or crash!
+        // Como todas las comprobaciones e inferencias se realizan
+        // en tiempo de compilación, todavía tenemos seguridad de tipo completa:
+        // intentar llamar al método quack() en una estructura que
+        // no lo tiene (como Duct) resultaría en un error de compilación,
+        // ¡no en un pánico o fallo en tiempo de ejecución!
         possible_duck.quack();
     }
 

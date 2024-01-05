@@ -1,8 +1,8 @@
 //
-// There is also an 'inline while'. Just like 'inline for', it
-// loops at compile time, allowing you to do all sorts of
-// interesting things not possible at runtime. See if you can
-// figure out what this rather bonkers example prints:
+// También existe un 'while inline'. Al igual que 'for inline', este
+// realiza bucles en tiempo de compilación, permitiéndote hacer todo tipo de
+// cosas interesantes que no serían posibles en tiempo de ejecución. Intenta
+// averiguar qué imprime este ejemplo bastante loco:
 //
 //     const foo = [3]*const [5]u8{ "~{s}~", "<{s}>", "d{s}b" };
 //     comptime var i = 0;
@@ -11,7 +11,7 @@
 //         print(foo[i] ++ "\n", .{foo[i]});
 //     }
 //
-// You haven't taken off that wizard hat yet, have you?
+// ¿Todavía no te has quitado ese sombrero de mago, verdad?
 //
 const print = @import("std").debug.print;
 
@@ -35,11 +35,12 @@ pub fn main() void {
     // at compile time.
     //
     // Please fix this to loop once per "instruction":
-    ??? (i < instructions.len) : (???) {
+    inline while (i < instructions.len) : (i += 3) {
 
-        // This gets the digit from the "instruction". Can you
-        // figure out why we subtract '0' from it?
+        // Esto obtiene el dígito de la "instrucción". ¿Puedes
+        // averiguar por qué restamos '0' de él?
         const digit = instructions[i + 1] - '0';
+        //print("Digit: {}", .{digit});
 
         // This 'switch' statement contains the actual work done
         // at runtime. At first, this doesn't seem exciting...
@@ -49,17 +50,16 @@ pub fn main() void {
             '*' => value *= digit,
             else => unreachable,
         }
-        // ...But it's quite a bit more exciting than it first appears.
-        // The 'inline while' no longer exists at runtime and neither
-        // does anything else not touched directly by runtime
-        // code. The 'instructions' string, for example, does not
-        // appear anywhere in the compiled program because it's
-        // not used by it!
+        // ...Pero es mucho más emocionante de lo que parece a primera vista.
+        // El 'while inline' ya no existe en tiempo de ejecución y tampoco
+        // existe nada más que no esté directamente tocado por el código en tiempo de ejecución.
+        // La cadena 'instructions', por ejemplo, no aparece en ningún lugar del programa compilado
+        // porque no es utilizada por él!
         //
-        // So in a very real sense, this loop actually converts
-        // the instructions contained in a string into runtime
-        // code at compile time. Guess we're compiler writers
-        // now. See? The wizard hat was justified after all.
+        // Así que, en un sentido muy real, este bucle realmente convierte
+        // las instrucciones contenidas en una cadena en código de tiempo de ejecución
+        // en tiempo de compilación. Supongo que ahora somos escritores de compiladores.
+        // ¿Ves? El sombrero de mago estaba justificado después de todo.
     }
 
     print("{}\n", .{value});

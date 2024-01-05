@@ -1,22 +1,22 @@
 //
-// There have been several instances where it would have been
-// nice to use loops in our programs, but we couldn't because the
-// things we were trying to do could only be done at compile
-// time. We ended up having to do those things MANUALLY, like
-// NORMAL people. Bah! We are PROGRAMMERS! The computer should be
-// doing this work.
+// Ha habido varias instancias en las que hubiera sido
+// agradable usar bucles en nuestros programas, pero no pudimos porque las
+// cosas que estábamos intentando hacer solo podían hacerse en tiempo de
+// compilación. Terminamos teniendo que hacer esas cosas MANUALMENTE, como
+// personas NORMALES. ¡Bah! ¡Somos PROGRAMADORES! El ordenador debería estar
+// haciendo este trabajo.
 //
-// An 'inline for' is performed at compile time, allowing you to
-// programatically loop through a series of items in situations
-// like those mentioned above where a regular runtime 'for' loop
-// wouldn't be allowed:
+// Un 'for inline' se realiza en tiempo de compilación, permitiéndote
+// programar bucles a través de una serie de elementos en situaciones
+// como las mencionadas anteriormente donde un bucle 'for' de tiempo de ejecución
+// regular no estaría permitido:
 //
 //     inline for (.{ u8, u16, u32, u64 }) |T| {
 //         print("{} ", .{@typeInfo(T).Int.bits});
 //     }
 //
-// In the above example, we're looping over a list of types,
-// which are available only at compile time.
+// En el ejemplo anterior, estamos recorriendo una lista de tipos,
+// que solo están disponibles en tiempo de compilación.
 //
 const print = @import("std").debug.print;
 
@@ -31,16 +31,15 @@ const Narcissus = struct {
 pub fn main() void {
     print("Narcissus has room in his heart for:", .{});
 
-    // Last time we examined the Narcissus struct, we had to
-    // manually access each of the three fields. Our 'if'
-    // statement was repeated three times almost verbatim. Yuck!
+    // La última vez que examinamos la estructura Narcissus, tuvimos que
+    // acceder manualmente a cada uno de los tres campos. Nuestra sentencia 'if'
+    // se repitió tres veces casi textualmente. ¡Qué asco!
     //
-    // Please use an 'inline for' to implement the block below
-    // for each field in the slice 'fields'!
+    // ¡Por favor, utiliza un 'for inline' para implementar el bloque de abajo
+    // para cada campo en la lista 'fields'!
 
     const fields = @typeInfo(Narcissus).Struct.fields;
-
-    ??? {
+    inline for (fields) |field| {
         if (field.type != void) {
             print(" {s}", .{field.name});
         }

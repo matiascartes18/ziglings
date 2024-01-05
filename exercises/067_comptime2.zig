@@ -1,7 +1,7 @@
 //
-// We've seen that Zig implicitly performs some evaluations at
-// compile time. But sometimes you'll want to explicitly request
-// compile time evaluation. For that, we have a new keyword:
+// Hemos visto que Zig realiza implícitamente algunas evaluaciones en
+// tiempo de compilación. Pero a veces querrás solicitar explícitamente
+// la evaluación en tiempo de compilación. Para eso, tenemos una nueva palabra clave:
 //
 //  .     .   .      o       .          .       *  . .     .
 //    .  *  |     .    .            .   .     .   .     * .    .
@@ -9,25 +9,24 @@
 //     *    |       *  .        .    .   .    --*--  .     *  .
 //  .     .    .    .   . . .      .        .   |   .    .  .
 //
-// When placed before a variable declaration, 'comptime'
-// guarantees that every usage of that variable will be performed
-// at compile time.
+// Cuando se coloca antes de una declaración de variable, 'comptime'
+// garantiza que cada uso de esa variable se realizará
+// en tiempo de compilación.
 //
-// As a simple example, compare these two statements:
+// Como un ejemplo simple, compara estas dos declaraciones:
 //
-//    var bar1 = 5;            // ERROR!
-//    comptime var bar2 = 5;   // OKAY!
+//    var bar1 = 5;            // ¡ERROR!
+//    comptime var bar2 = 5;   // ¡BIEN!
 //
-// The first one gives us an error because Zig assumes mutable
-// identifiers (declared with 'var') will be used at runtime and
-// we have not assigned a runtime type (like u8 or f32). Trying
-// to use a comptime_int of undetermined size at runtime is
-// a MEMORY CRIME and you are UNDER ARREST.
+// La primera nos da un error porque Zig asume que los identificadores mutables
+// (declarados con 'var') se utilizarán en tiempo de ejecución y
+// no hemos asignado un tipo de tiempo de ejecución (como u8 o f32). Intentar
+// usar un comptime_int de tamaño indeterminado en tiempo de ejecución es
+// un CRIMEN DE MEMORIA y estás BAJO ARRESTO.
 //
-// The second one is okay because we've told Zig that 'bar2' is
-// a compile time variable. Zig will help us ensure this is true
-// and let us know if we make a mistake.
-//
+// La segunda está bien porque le hemos dicho a Zig que 'bar2' es
+// una variable de tiempo de compilación. Zig nos ayudará a asegurar que esto sea cierto
+// y nos informará si cometemos un error.//
 const print = @import("std").debug.print;
 
 pub fn main() void {
@@ -35,7 +34,7 @@ pub fn main() void {
     // In this contrived example, we've decided to allocate some
     // arrays using a variable count! But something's missing...
     //
-    var count = 0;
+    comptime var count = 0;
 
     count += 1;
     const a1: [count]u8 = .{'A'} ** count;
@@ -51,14 +50,14 @@ pub fn main() void {
 
     print("{s} {s} {s} {s}\n", .{ a1, a2, a3, a4 });
 
-    // Builtin BONUS!
+    // ¡BONUS de funciones incorporadas!
     //
-    // The @compileLog() builtin is like a print statement that
-    // ONLY operates at compile time. The Zig compiler treats
-    // @compileLog() calls as errors, so you'll want to use them
-    // temporarily to debug compile time logic.
+    // La función incorporada @compileLog() es como una instrucción print que
+    // SOLO opera en tiempo de compilación. El compilador Zig trata
+    // las llamadas a @compileLog() como errores, por lo que querrás usarlas
+    // temporalmente para depurar la lógica en tiempo de compilación.
     //
-    // Try uncommenting this line and playing around with it
-    // (copy it, move it) to see what it does:
-    //@compileLog("Count at compile time: ", count);
+    // Intenta descomentar esta línea y jugar con ella
+    // (cópiala, muévela) para ver lo que hace:
+    //@compileLog("Cuenta en tiempo de compilacion: ", count);
 }

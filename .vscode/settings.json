@@ -12,5 +12,9 @@
     "editor.defaultColorDecorators": true,
     "editor.wordWrap": "wordWrapColumn",
     "editor.bracketPairColorization.enabled": true,
-    "editor.fontLigatures": true
+    "editor.fontLigatures": true,
+    "editor.defaultFormatter": "ziglang.vscode-zig",
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false,
+    "zig.formattingProvider": "extension"
 }

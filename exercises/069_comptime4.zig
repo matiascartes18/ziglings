@@ -1,15 +1,15 @@
 //
-// One of the more common uses of 'comptime' function parameters is
-// passing a type to a function:
+// Uno de los usos más comunes de los parámetros de función 'comptime' es
+// pasar un tipo a una función:
 //
 //     fn foo(comptime MyType: type) void { ... }
 //
-// In fact, types are ONLY available at compile time, so the
-// 'comptime' keyword is required here.
+// De hecho, los tipos solo están disponibles en tiempo de compilación, por lo que
+// la palabra clave 'comptime' es necesaria aquí.
 //
-// Please take a moment to put on the wizard hat which has been
-// provided for you. We're about to use this ability to implement
-// a generic function.
+// Por favor, tómate un momento para ponerte el sombrero de mago que se te ha
+// proporcionado. Estamos a punto de usar esta habilidad para implementar
+// una función genérica.
 //
 const print = @import("std").debug.print;
 
@@ -23,27 +23,27 @@ pub fn main() void {
     print("s1={any}, s2={any}, s3={any}\n", .{ s1, s2, s3 });
 }
 
-// This function is pretty wild because it executes at runtime
-// and is part of the final compiled program. The function is
-// compiled with unchanging data sizes and types.
+// Esta función es bastante salvaje porque se ejecuta en tiempo de ejecución
+// y es parte del programa final compilado. La función se
+// compila con tamaños y tipos de datos inmutables.
 //
-// And yet it ALSO allows for different sizes and types. This
-// seems paradoxical. How could both things be true?
+// Y sin embargo, TAMBIÉN permite diferentes tamaños y tipos. Esto
+// parece paradójico. ¿Cómo podrían ambas cosas ser ciertas?
 //
-// To accomplish this, the Zig compiler actually generates a
-// separate copy of the function for every size/type combination!
-// So in this case, three different functions will be generated
-// for you, each with machine code that handles that specific
-// data size and type.
+// Para lograr esto, el compilador Zig en realidad genera una
+// copia separada de la función para cada combinación de tamaño/tipo!
+// Así que en este caso, se generarán tres funciones diferentes
+// para ti, cada una con código de máquina que maneja ese específico
+// tamaño y tipo de datos.
 //
-// Please fix this function so that the 'size' parameter:
+// Por favor, corrige esta función para que el parámetro 'size':
 //
-//     1) Is guaranteed to be known at compile time.
-//     2) Sets the size of the array of type T (which is the
-//        sequence we're creating and returning).
+//     1) Esté garantizado que se conozca en tiempo de compilación.
+//     2) Establezca el tamaño del array de tipo T (que es la
+//        secuencia que estamos creando y devolviendo).
 //
-fn makeSequence(comptime T: type, ??? size: usize) [???]T {
-    var sequence: [???]T = undefined;
+fn makeSequence(comptime T: type, comptime size: usize) [size]T {
+    var sequence: [size]T = undefined;
     var i: usize = 0;
 
     while (i < size) : (i += 1) {

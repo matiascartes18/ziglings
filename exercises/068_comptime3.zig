@@ -1,19 +1,19 @@
 //
-// You can also put 'comptime' before a function parameter to
-// enforce that the argument passed to the function must be known
-// at compile time. We've actually been using a function like
-// this the entire time, std.debug.print():
+// También puedes poner 'comptime' antes de un parámetro de función para
+// exigir que el argumento pasado a la función debe ser conocido
+// en tiempo de compilación. De hecho, hemos estado usando una función así
+// todo el tiempo, std.debug.print():
 //
 //     fn print(comptime fmt: []const u8, args: anytype) void
 //
-// Notice that the format string parameter 'fmt' is marked as
-// 'comptime'.  One of the neat benefits of this is that the
-// format string can be checked for errors at compile time rather
-// than crashing at runtime.
+// Observa que el parámetro de la cadena de formato 'fmt' está marcado como
+// 'comptime'. Uno de los beneficios interesantes de esto es que la
+// cadena de formato puede ser verificada en busca de errores en tiempo de compilación en lugar de
+// fallar en tiempo de ejecución.
 //
-// (The actual formatting is done by std.fmt.format() and it
-// contains a complete format string parser that runs entirely at
-// compile time!)
+// (¡El formateo real es realizado por std.fmt.format() y contiene
+// un analizador de cadenas de formato completo que se ejecuta completamente en
+// tiempo de compilación!)
 //
 const print = @import("std").debug.print;
 
@@ -30,21 +30,23 @@ const Schooner = struct {
     fn scaleMe(self: *Schooner, comptime scale: u32) void {
         comptime var my_scale = scale;
 
-        // We did something neat here: we've anticipated the
-        // possibility of accidentally attempting to create a
-        // scale of 1:0. Rather than having this result in a
-        // divide-by-zero error at runtime, we've turned this
-        // into a compile error.
+        // Hicimos algo ingenioso aquí: hemos anticipado la
+        // posibilidad de intentar accidentalmente crear una
+        // escala de 1:0. En lugar de tener esto resultando en un
+        // error de división por cero en tiempo de ejecución, lo hemos convertido
+        // en un error de compilación.
         //
-        // This is probably the correct solution most of the
-        // time. But our model boat model program is very casual
-        // and we just want it to "do what I mean" and keep
-        // working.
+        // Probablemente esta sea la solución correcta la mayoría de las
+        // veces. Pero nuestro programa de modelado de barcos es muy informal
+        // y solo queremos que "haga lo que quiero" y siga
+        // funcionando.
         //
-        // Please change this so that it sets a 0 scale to 1
-        // instead.
-        if (my_scale == 0) @compileError("Scale 1:0 is not valid!");
-
+        // Por favor, cambia esto para que establezca una escala de 0 a 1
+        // en su lugar.
+        //if (my_scale == 0) @compileError("Scale 1:0 is not valid!");
+        if (my_scale == 0) {
+            my_scale = 1;
+        }
         self.scale = my_scale;
         self.hull_length /= my_scale;
         self.bowsprit_length /= my_scale;
@@ -69,7 +71,7 @@ pub fn main() void {
     // Hey, we can't just pass this runtime variable as an
     // argument to the scaleMe() method. What would let us do
     // that?
-    var scale: u32 = undefined;
+    comptime var scale: u32 = undefined;
 
     scale = 32; // 1:32 scale
 
@@ -87,22 +89,21 @@ pub fn main() void {
     whale.printMe();
 }
 //
-// Going deeper:
+// Profundizando:
 //
-// What would happen if you DID attempt to build a model in the
-// scale of 1:0?
+// ¿Qué sucedería si intentaras construir un modelo a escala 1:0?
 //
-//    A) You're already done!
-//    B) You would suffer a mental divide-by-zero error.
-//    C) You would construct a singularity and destroy the
-//       planet.
+//    A) ¡Ya has terminado!
+//    B) Sufrirías un error mental de división por cero.
+//    C) Construirías una singularidad y destruirías el
+//       planeta.
 //
-// And how about a model in the scale of 0:1?
+// ¿Y qué tal un modelo a escala 0:1?
 //
-//    A) You're already done!
-//    B) You'd arrange nothing carefully into the form of the
-//       original nothing but infinitely larger.
-//    C) You would construct a singularity and destroy the
-//       planet.
+//    A) ¡Ya has terminado!
+//    B) Organizarías cuidadosamente la nada en la forma del
+//       nada original pero infinitamente más grande.
+//    C) Construirías una singularidad y destruirías el
+//       planeta.
 //
-// Answers can be found on the back of the Ziglings packaging.
+// Las respuestas se pueden encontrar en la parte posterior del empaque de Ziglings.

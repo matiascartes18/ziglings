@@ -1,23 +1,23 @@
 //
-// As a matter of fact, you can put 'comptime' in front of any
-// expression to force it to be run at compile time.
+// De hecho, puedes poner 'comptime' delante de cualquier
+// expresión para forzar su ejecución en tiempo de compilación.
 //
-// Execute a function:
+// Ejecutar una función:
 //
 //     comptime llama();
 //
-// Get a value:
+// Obtener un valor:
 //
 //     bar = comptime baz();
 //
-// Execute a whole block:
+// Ejecutar un bloque completo:
 //
 //     comptime {
 //         bar = baz + biff();
 //         llama(bar);
 //     }
 //
-// Get a value from a block:
+// Obtener un valor de un bloque:
 //
 //     var llama = comptime bar: {
 //         const baz = biff() + bonk();
@@ -32,24 +32,24 @@ const llamas = [llama_count]u32{ 5, 10, 15, 20, 25 };
 pub fn main() void {
     // We meant to fetch the last llama. Please fix this simple
     // mistake so the assertion no longer fails.
-    const my_llama = getLlama(5);
+    const my_llama = getLlama(4);
 
     print("My llama value is {}.\n", .{my_llama});
 }
 
-fn getLlama(i: usize) u32 {
-    // We've put a guard assert() at the top of this function to
-    // prevent mistakes. The 'comptime' keyword here means that
-    // the mistake will be caught when we compile!
+fn getLlama(comptime i: usize) u32 {
+    // Hemos puesto un assert() de guardia al principio de esta función para
+    // prevenir errores. La palabra clave 'comptime' aquí significa que
+    // el error será detectado cuando compilamos!
     //
-    // Without 'comptime', this would still work, but the
-    // assertion would fail at runtime with a PANIC, and that's
-    // not as nice.
+    // Sin 'comptime', esto todavía funcionaría, pero la
+    // afirmación fallaría en tiempo de ejecución con un PANIC, y eso no es
+    // tan agradable.
     //
-    // Unfortunately, we're going to get an error right now
-    // because the 'i' parameter needs to be guaranteed to be
-    // known at compile time. What can you do with the 'i'
-    // parameter above to make this so?
+    // Desafortunadamente, vamos a obtener un error ahora mismo
+    // porque se necesita garantizar que el parámetro 'i' se conozca
+    // en tiempo de compilación. ¿Qué puedes hacer con el parámetro 'i'
+    // arriba para que esto sea así?
     comptime assert(i < llama_count);
 
     return llamas[i];
