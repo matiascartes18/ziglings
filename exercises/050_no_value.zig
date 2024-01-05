@@ -1,74 +1,74 @@
 //
-//    "We live on a placid island of ignorance in the midst
-//     of black seas of infinity, and it was not meant that
-//     we should voyage far."
+//    "Vivimos en una isla plácida de ignorancia en medio
+//     de mares negros de infinitud, y no estaba destinado
+//     que viajáramos lejos."
 //
-//     from The Call of Cthulhu
-//       by H. P. Lovecraft
+//     de La Llamada de Cthulhu
+//       por H. P. Lovecraft
 //
-// Zig has at least four ways of expressing "no value":
+// Zig tiene al menos cuatro formas de expresar "sin valor":
 //
-// * undefined
+// * undefined (indefinido)
 //
 //       var foo: u8 = undefined;
 //
-//       "undefined" should not be thought of as a value, but as a way
-//       of telling the compiler that you are not assigning a value
-//       _yet_. Any type may be set to undefined, but attempting
-//       to read or use that value is _always_ a mistake.
+//       "undefined" no debe considerarse como un valor, sino como una forma
+//       de decirle al compilador que aún no estás asignando un valor.
+//       Cualquier tipo puede ser definido como undefined, pero intentar
+//       leer o usar ese valor siempre es un error.
 //
-// * null
+// * null (nulo)
 //
 //       var foo: ?u8 = null;
 //
-//       The "null" primitive value _is_ a value that means "no value".
-//       This is typically used with optional types as with the ?u8
-//       shown above. When foo equals null, that's not a value of type
-//       u8. It means there is _no value_ of type u8 in foo at all!
+//       El valor primitivo "null" es un valor que significa "sin valor".
+//       Esto se utiliza típicamente con tipos opcionales como ?u8
+//       mostrado arriba. Cuando foo es igual a null, no es un valor del tipo
+//       u8. ¡Significa que no hay ningún valor del tipo u8 en foo en absoluto!
 //
-// * error
+// * error (error)
 //
 //       var foo: MyError!u8 = BadError;
 //
-//       Errors are _very_ similar to nulls. They _are_ a value, but
-//       they usually indicate that the "real value" you were looking
-//       for does not exist. Instead, you have an error. The example
-//       error union type of MyError!u8 means that foo either holds
-//       a u8 value OR an error. There is _no value_ of type u8 in foo
-//       when it's set to an error!
+//       Los errores son muy similares a los nulos. Son un valor, pero
+//       generalmente indican que el "valor real" que estabas buscando
+//       no existe. En su lugar, tienes un error. El ejemplo de tipo de
+//       unión de error MyError!u8 significa que foo contiene un valor
+//       u8 o un error. ¡No hay ningún valor del tipo u8 en foo cuando
+//       está configurado como un error!
 //
-// * void
+// * void (vacío)
 //
 //       var foo: void = {};
 //
-//       "void" is a _type_, not a value. It is the most popular of the
-//       Zero Bit Types (those types which take up absolutely no space
-//       and have only a semantic value. When compiled to executable
-//       code, zero bit types generate no code at all. The above example
-//       shows a variable foo of type void which is assigned the value
-//       of an empty expression. It's much more common to see void as
-//       the return type of a function that returns nothing.
+//       "void" es un _tipo_, no un valor. Es el más popular de los
+//       Tipos de Cero Bits (esos tipos que no ocupan espacio en absoluto
+//       y solo tienen un valor semántico). Cuando se compila a código
+//       ejecutable, los tipos de cero bits no generan ningún código en absoluto.
+//       El ejemplo anterior muestra una variable foo de tipo void que se
+//       le asigna el valor de una expresión vacía. Es mucho más común ver
+//       void como el tipo de retorno de una función que no devuelve nada.
 //
-// Zig has all of these ways of expressing different types of "no value"
-// because they each serve a purpose. Briefly:
+// Zig tiene todas estas formas de expresar diferentes tipos de "sin valor"
+// porque cada una tiene un propósito. En resumen:
 //
-//   * undefined - there is no value YET, this cannot be read YET
-//   * null      - there is an explicit value of "no value"
-//   * errors    - there is no value because something went wrong
-//   * void      - there will NEVER be a value stored here
+//   * undefined (indefinido) - no hay valor TODAVÍA, esto no se puede leer TODAVÍA
+//   * null (nulo)            - hay un valor explícito de "sin valor"
+//   * error (error)          - no hay valor porque algo salió mal
+//   * void (vacío)           - NUNCA habrá un valor almacenado aquí
 //
-// Please use the correct "no value" for each ??? to make this program
-// print out a cursed quote from the Necronomicon. ...If you dare.
+// Por favor, utiliza el "sin valor" correcto para cada ??? para que este programa
+// imprima una cita maldita del Necronomicón. ...Si te atreves.
 //
 const std = @import("std");
 
 const Err = error{Cthulhu};
 
 pub fn main() void {
-    var first_line1: *const [16]u8 = ???;
+    var first_line1: *const [16]u8 = undefined;
     first_line1 = "That is not dead";
 
-    var first_line2: Err!*const [21]u8 = ???;
+    var first_line2: Err!*const [21]u8 = Err.Cthulhu;
     first_line2 = "which can eternal lie";
 
     // Note we need the "{!s}" format for the error union string.
@@ -77,8 +77,8 @@ pub fn main() void {
     printSecondLine();
 }
 
-fn printSecondLine() ??? {
-    var second_line2: ?*const [18]u8 = ???;
+fn printSecondLine() void {
+    var second_line2: ?*const [18]u8 = null;
     second_line2 = "even death may die";
 
     std.debug.print("And with strange aeons {s}.\n", .{second_line2.?});

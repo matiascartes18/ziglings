@@ -1,69 +1,54 @@
 //
-// "Compile time" is a program's environment while it is being
-// compiled. In contrast, "run time" is the environment while the
-// compiled program is executing (traditionally as machine code
-// on a hardware CPU).
+// "Tiempo de compilación" es el entorno de un programa mientras se está compilando. En contraste, "tiempo de ejecución" es el entorno mientras el programa compilado se está ejecutando (tradicionalmente como código de máquina en una CPU).
 //
-// Errors make an easy example:
+// Los errores son un ejemplo sencillo:
 //
-// 1. Compile-time error: caught by the compiler, usually
-//    resulting in a message to the programmer.
+// 1. Error de tiempo de compilación: capturado por el compilador, generalmente resultando en un mensaje para el programador.
 //
-// 2. Runtime error: either caught by the running program itself
-//    or by the host hardware or operating system. Could be
-//    gracefully caught and handled or could cause the computer
-//    to crash (or halt and catch fire)!
+// 2. Error de tiempo de ejecución: capturado por el propio programa en ejecución o por el hardware o sistema operativo anfitrión. Puede ser capturado y manejado de manera adecuada o puede hacer que la computadora se bloquee (¡o se incendie!).
 //
-// All compiled languages must perform a certain amount of logic
-// at compile time in order to analyze the code, maintain a table
-// of symbols (such as variable and function names), etc.
+// Todos los lenguajes compilados deben realizar cierta cantidad de lógica en tiempo de compilación para analizar el código, mantener una tabla de símbolos (como nombres de variables y funciones), etc.
 //
-// Optimizing compilers can also figure out how much of a program
-// can be pre-computed or "inlined" at compile time to make the
-// resulting program more efficient. Smart compilers can even
-// "unroll" loops, turning their logic into a fast linear
-// sequence of statements (at the usually very slight expense of
-// the increased size of the repeated code).
+// Los compiladores optimizadores también pueden determinar cuánto de un programa se puede precomputar o "incluir" en tiempo de compilación para hacer que el programa resultante sea más eficiente. Los compiladores inteligentes incluso pueden "desenrollar" bucles, convirtiendo su lógica en una secuencia lineal rápida de declaraciones (a costa del aumento del tamaño del código repetido).
 //
-// Zig takes these concepts further by making these optimizations
-// an integral part of the language itself!
+// ¡Zig lleva estos conceptos más allá al hacer que estas optimizaciones sean parte integral del propio lenguaje!
 //
 const print = @import("std").debug.print;
 
 pub fn main() void {
-    // ALL numeric literals in Zig are of type comptime_int or
-    // comptime_float. They are of arbitrary size (as big or
-    // little as you need).
+    // TODOS los literales numéricos en Zig son de tipo comptime_int o
+    // comptime_float. Son de tamaño arbitrario (tan grandes o
+    // pequeños como necesites).
     //
-    // Notice how we don't have to specify a size like "u8",
-    // "i32", or "f64" when we assign identifiers immutably with
+    // Observa cómo no tenemos que especificar un tamaño como "u8",
+    // "i32", o "f64" cuando asignamos identificadores de manera inmutable con
     // "const".
     //
-    // When we use these identifiers in our program, the VALUES
-    // are inserted at compile time into the executable code. The
-    // IDENTIFIERS "const_int" and "const_float" don't exist in
-    // our compiled application!
+    // Cuando usamos estos identificadores en nuestro programa, los VALORES
+    // se insertan en tiempo de compilación en el código ejecutable. Los
+    // IDENTIFICADORES "const_int" y "const_float" no existen en
+    // nuestra aplicación compilada!
     const const_int = 12345;
     const const_float = 987.654;
 
     print("Immutable: {}, {d:.3}; ", .{ const_int, const_float });
 
-    // But something changes when we assign the exact same values
-    // to identifiers mutably with "var".
+    // Pero algo cambia cuando asignamos los mismos valores exactos
+    // a identificadores de manera mutable con "var".
     //
-    // The literals are STILL comptime_int and comptime_float,
-    // but we wish to assign them to identifiers which are
-    // mutable at runtime.
+    // Los literales SIGUEN siendo comptime_int y comptime_float,
+    // pero deseamos asignarlos a identificadores que son
+    // mutables en tiempo de ejecución.
     //
-    // To be mutable at runtime, these identifiers must refer to
-    // areas of memory. In order to refer to areas of memory, Zig
-    // must know exactly how much memory to reserve for these
-    // values. Therefore, it follows that we just specify numeric
-    // types with specific sizes. The comptime numbers will be
-    // coerced (if they'll fit!) into your chosen runtime types.
-    // For this it is necessary to specify a size, e.g. 32 bit.
-    var var_int = 12345;
-    var var_float = 987.654;
+    // Para ser mutable en tiempo de ejecución, estos identificadores deben referirse a
+    // áreas de memoria. Para referirse a áreas de memoria, Zig
+    // debe saber exactamente cuánta memoria reservar para estos
+    // valores. Por lo tanto, se deduce que debemos especificar tipos numéricos
+    // con tamaños específicos. Los números comptime serán
+    // forzados (¡si caben!) en tus tipos de tiempo de ejecución elegidos.
+    // Para esto es necesario especificar un tamaño, por ejemplo, 32 bits.
+    var var_int: u32 = 12345;
+    var var_float: f32 = 987.654;
 
     // We can change what is stored at the areas set aside for
     // "var_int" and "var_float" in the running compiled program.
@@ -72,9 +57,8 @@ pub fn main() void {
 
     print("Mutable: {}, {d:.3}; ", .{ var_int, var_float });
 
-    // Bonus: Now that we're familiar with Zig's builtins, we can
-    // also inspect the types to see what they are, no guessing
-    // needed!
+    // Bonus: Ahora que estamos familiarizados con las funciones incorporadas de Zig, podemos
+    // también inspeccionar los tipos para ver qué son, no es necesario adivinar!
     print("Types: {}, {}, {}, {}\n", .{
         @TypeOf(const_int),
         @TypeOf(const_float),

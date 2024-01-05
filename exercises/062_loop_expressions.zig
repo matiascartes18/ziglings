@@ -1,35 +1,32 @@
 //
-// Remember using if/else statements as expressions like this?
+// ¿Recuerdas cómo usar declaraciones if/else como expresiones de esta manera?
 //
 //     var foo: u8 = if (true) 5 else 0;
 //
-// Zig also lets you use for and while loops as expressions.
+// Zig también te permite usar bucles for y while como expresiones.
 //
-// Like 'return' for functions, you can return a value from a
-// loop block with break:
+// Al igual que 'return' para las funciones, puedes devolver un valor desde un
+// bloque de bucle con break:
 //
-//     break true; // return boolean value from block
+//     break true; // devuelve un valor booleano desde el bloque
 //
-// But what value is returned from a loop if a break statement is
-// never reached? We need a default expression. Thankfully, Zig
-// loops also have 'else' clauses! As you might have guessed, the
-// 'else' clause is evaluated when: 1) a 'while' condition becomes
-// false or 2) a 'for' loop runs out of items.
+// Pero, ¿qué valor se devuelve de un bucle si nunca se alcanza una declaración break?
+// Necesitamos una expresión por defecto. Afortunadamente, los bucles en Zig también tienen cláusulas 'else'!
+// Como podrás haber adivinado, la cláusula 'else' se evalúa cuando: 1) una condición 'while' se vuelve falsa o
+// 2) un bucle 'for' se queda sin elementos.
 //
 //     const two: u8 = while (true) break 2 else 0;         // 2
 //     const three: u8 = for ([1]u8{1}) |f| break 3 else 0; // 3
 //
-// If you do not provide an else clause, an empty one will be
-// provided for you, which will evaluate to the void type, which
-// is probably not what you want. So consider the else clause
-// essential when using loops as expressions.
+// Si no proporcionas una cláusula else, se proporcionará una vacía por defecto,
+// que se evaluará como el tipo void, lo cual probablemente no es lo que quieres.
+// Así que considera la cláusula else como esencial cuando uses bucles como expresiones.
 //
 //     const four: u8 = while (true) {
 //         break 4;
-//     };               // <-- ERROR! Implicit 'else void' here!
+//     };               // <-- ¡ERROR! ¡Aquí hay un 'else void' implícito!
 //
-// With that in mind, see if you can fix the problem with this
-// program.
+// Teniendo eso en cuenta, intenta solucionar el problema con este programa.
 //
 const print = @import("std").debug.print;
 
@@ -46,8 +43,8 @@ pub fn main() void {
     // Let's find the first language with a three-letter name and
     // return it from the for loop.
     const current_lang: ?[]const u8 = for (langs) |lang| {
-        if (lang.len == 3) break lang;
-    };
+        if (lang.len == 3) break lang;   
+    } else null;
 
     if (current_lang) |cl| {
         print("Current language: {s}\n", .{cl});

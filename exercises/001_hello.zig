@@ -2,20 +2,19 @@
 // Oh no, this is supposed to print "Hello world!" but it needs
 // your help.
 //
-// Zig functions are private by default but the main() function
-// should be public.
+// Por defecto, las funciones en Zig son privadas, pero la función main() debe ser pública.
 //
-// A function is made public with the "pub" statement like so:
+// Una función se hace pública con la declaración "pub" de la siguiente manera:
 //
 //     pub fn foo() void {
 //         ...
 //     }
 //
-// Perhaps knowing this will help solve the errors we're getting
-// with this little program?
+// Tal vez saber esto nos ayude a resolver los errores que estamos obteniendo
+// con este pequeño programa?
 //
 const std = @import("std");
 
-fn main() void {
+pub fn main() void {
     std.debug.print("Hello world!\n", .{});
 }

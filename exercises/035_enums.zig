@@ -1,26 +1,27 @@
 //
-// Remember that little mathematical virtual machine we made using the
-// "unreachable" statement?  Well, there were two problems with the
-// way we were using op codes:
+// Recuerda esa pequeña máquina virtual matemática que hicimos usando la
+// declaración "unreachable"? Bueno, había dos problemas con la forma en que
+// estábamos usando los códigos de operación:
 //
-//   1. Having to remember op codes by number is no good.
-//   2. We had to use "unreachable" because Zig had no way of knowing
-//      how many valid op codes there were.
+//   1. Tener que recordar los códigos de operación por número no es bueno.
+//   2. Teníamos que usar "unreachable" porque Zig no tenía forma de saber
+//      cuántos códigos de operación válidos había.
 //
-// An "enum" is a Zig construct that lets you give names to numeric
-// values and store them in a set. They look a lot like error sets:
+// Un "enum" es una construcción de Zig que te permite dar nombres a valores
+// numéricos y almacenarlos en un conjunto. Se parecen mucho a los conjuntos
+// de errores:
 //
 //     const Fruit = enum{ apple, pear, orange };
 //
 //     const my_fruit = Fruit.apple;
 //
-// Let's use an enum in place of the numbers we were using in the
-// previous version!
+// ¡Vamos a usar un enum en lugar de los números que estábamos usando en la
+// versión anterior!
 //
 const std = @import("std");
 
 // Please complete the enum!
-const Ops = enum { ??? };
+const Ops = enum { inc, dec, pow };
 
 pub fn main() void {
     const operations = [_]Ops{

@@ -1,17 +1,17 @@
 //
-// Another common problem is a block of code that could exit in multiple
-// places due to an error - but that needs to do something before it
-// exits (typically to clean up after itself).
+// Otro problema común es un bloque de código que podría salir en múltiples
+// lugares debido a un error, pero que necesita hacer algo antes de salir
+// (normalmente para limpiar después de sí mismo).
 //
-// An "errdefer" is a defer that only runs if the block exits with an error:
+// Un "errdefer" es un defer que solo se ejecuta si el bloque sale con un error:
 //
 //     {
 //         errdefer cleanup();
 //         try canFail();
 //     }
 //
-// The cleanup() function is called ONLY if the "try" statement returns an
-// error produced by canFail().
+// La función cleanup() se llama SOLO si la declaración "try" devuelve un
+// error producido por canFail().
 //
 const std = @import("std");
 
@@ -32,7 +32,7 @@ fn makeNumber() MyErr!u32 {
 
     // Please make the "failed" message print ONLY if the makeNumber()
     // function exits with an error:
-    std.debug.print("failed!\n", .{});
+    errdefer std.debug.print("failed!\n", .{});
 
     var num = try getNumber(); // <-- This could fail!
 

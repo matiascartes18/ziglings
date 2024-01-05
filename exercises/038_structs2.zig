@@ -1,10 +1,7 @@
 //
-// Grouping values in structs is not merely convenient. It also allows
-// us to treat the values as a single item when storing them, passing
-// them to functions, etc.
+// Agrupar valores en estructuras no es solo conveniente. También nos permite tratar los valores como un solo elemento al almacenarlos, pasarlos a funciones, etc.
 //
-// This exercise demonstrates how we can store structs in an array and
-// how doing so lets us print them using a loop.
+// Este ejercicio demuestra cómo podemos almacenar estructuras en un arreglo y cómo hacerlo nos permite imprimirlos usando un bucle.
 //
 const std = @import("std");
 
@@ -33,6 +30,12 @@ pub fn main() void {
         .experience = 10,
     };
 
+    chars[1] = Character{
+        .role = Role.bard,
+        .gold = 10,
+        .health = 100,
+        .experience = 20,
+    };
     // Please add "Zump the Loud" with the following properties:
     //
     //     role       bard

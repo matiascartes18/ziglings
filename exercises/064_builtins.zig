@@ -1,44 +1,30 @@
 //
-// The Zig compiler provides "builtin" functions. You've already
-// gotten used to seeing an @import() at the top of every
-// Ziglings exercise.
+// El compilador Zig proporciona funciones "builtin". Ya te has acostumbrado a ver una instrucción @import() en la parte superior de cada ejercicio de Ziglings.
 //
-// We've also seen @intCast() in "016_for2.zig", "058_quiz7.zig";
-// and @intFromEnum() in "036_enums2.zig".
+// También hemos visto @intCast() en "016_for2.zig", "058_quiz7.zig"; y @intFromEnum() en "036_enums2.zig".
 //
-// Builtins are special because they are intrinsic to the Zig
-// language itself (as opposed to being provided in the standard
-// library). They are also special because they can provide
-// functionality that is only possible with help from the
-// compiler, such as type introspection (the ability to examine
-// type properties from within a program).
+// Los builtins son especiales porque son intrínsecos al propio lenguaje Zig (en contraposición a ser proporcionados en la biblioteca estándar). También son especiales porque pueden proporcionar funcionalidades que solo son posibles con la ayuda del compilador, como la introspección de tipos (la capacidad de examinar las propiedades de un tipo desde dentro de un programa).
 //
-// Zig contains over 100 builtin functions. We're certainly
-// not going to cover them all, but we can look at some
-// interesting ones.
+// Zig contiene más de 100 funciones builtin. Ciertamente no vamos a cubrir todas, pero podemos ver algunas interesantes.
 //
-// Before we begin, know that many builtin functions have
-// parameters marked as "comptime". It's probably fairly clear
-// what we mean when we say that these parameters need to be
-// "known at compile time." But rest assured we'll be doing the
-// "comptime" subject real justice soon.
+// Antes de comenzar, debes saber que muchas funciones builtin tienen parámetros marcados como "comptime". Probablemente esté bastante claro lo que queremos decir cuando decimos que estos parámetros deben ser "conocidos en tiempo de compilación". Pero no te preocupes, pronto abordaremos el tema de "comptime" de manera adecuada.
 //
 const print = @import("std").debug.print;
 
 pub fn main() void {
-    // The second builtin, alphabetically, is:
+    // El segundo builtin, en orden alfabético, es:
     //   @addWithOverflow(a: anytype, b: anytype) struct { @TypeOf(a, b), u1 }
-    //     * 'a' and 'b' are numbers of anytype.
-    //     * The return value is a tuple with the result and a possible overflow bit.
+    //     * 'a' y 'b' son números de cualquier tipo.
+    //     * El valor de retorno es una tupla con el resultado y un posible bit de desbordamiento.
     //
-    // Let's try it with a tiny 4-bit integer size to make it clear:
+    // Vamos a probarlo con un tamaño de entero de 4 bits para que quede claro:
     const a: u4 = 0b1101;
     const b: u4 = 0b0101;
     const my_result = @addWithOverflow(a, b);
 
-    // Check out our fancy formatting! b:0>4 means, "print
-    // as a binary number, zero-pad right-aligned four digits."
-    // The print() below will produce: "1101 + 0101 = 0010 (true)".
+    // ¡Mira nuestro formato elegante! b:0>4 significa "imprimir
+    // como un número binario, rellenar con ceros a la derecha y alinear a la derecha en cuatro dígitos".
+    // La llamada a print() a continuación producirá: "1101 + 0101 = 0010 (true)".
     print("{b:0>4} + {b:0>4} = {b:0>4} ({s})", .{ a, b, my_result[0], if (my_result[1] == 1) "true" else "false" });
 
     // Let's make sense of this answer. The value of 'b' in decimal is 5.
@@ -63,7 +49,7 @@ pub fn main() void {
     //
     // If there was no overflow at all while adding 5 to a, what value would
     // 'my_result' hold? Write the answer in into 'expected_result'.
-    const expected_result: u8 = ???;
+    const expected_result: u8 = 0b10010;
     print(". Without overflow: {b:0>8}. ", .{expected_result});
 
     print("Furthermore, ", .{});
@@ -78,6 +64,6 @@ pub fn main() void {
     // Now it's your turn. See if you can fix this attempt to use
     // this builtin to reverse the bits of a u8 integer.
     const input: u8 = 0b11110000;
-    const tupni: u8 = @bitReverse(input, tupni);
+    const tupni: u8 = @bitReverse(input);
     print("{b:0>8} backwards is {b:0>8}.\n", .{ input, tupni });
 }

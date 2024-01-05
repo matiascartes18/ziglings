@@ -1,44 +1,33 @@
 //
-// Zig has builtins for mathematical operations such as...
+// Zig tiene funciones integradas para operaciones matemáticas como...
 //
 //      @sqrt        @sin           @cos
 //      @exp         @log           @floor
 //
-// ...and lots of type casting operations such as...
+// ...y muchas operaciones de conversión de tipos como...
 //
 //      @as          @errorFromInt  @floatFromInt
 //      @ptrFromInt  @intFromPtr    @intFromEnum
 //
-// Spending part of a rainy day skimming through the complete
-// list of builtins in the official Zig documentation wouldn't be
-// a bad use of your time. There are some seriously cool features
-// in there. Check out @call, @compileLog, @embedFile, and @src!
+// Pasar parte de un día lluvioso revisando la lista completa de funciones integradas en la documentación oficial de Zig no sería una mala manera de pasar el tiempo. Hay algunas características realmente geniales allí. ¡Echa un vistazo a @call, @compileLog, @embedFile y @src!
 //
 //                            ...
 //
-// For now, we're going to complete our examination of builtins
-// by exploring just THREE of Zig's MANY introspection abilities:
+// Por ahora, vamos a completar nuestra exploración de las funciones integradas explorando solo TRES de las MUCHAS capacidades de introspección de Zig:
 //
 // 1. @This() type
 //
-// Returns the innermost struct, enum, or union that a function
-// call is inside.
+// Devuelve la estructura, enumeración o unión más interna en la que se encuentra una llamada a función.
 //
 // 2. @typeInfo(comptime T: type) @import("std").builtin.Type
 //
-// Returns information about any type in a data structure which
-// will contain different information depending on which type
-// you're examining.
+// Devuelve información sobre cualquier tipo en una estructura de datos que contendrá información diferente dependiendo del tipo que estés examinando.
 //
 // 3. @TypeOf(...) type
 //
-// Returns the type common to all input parameters (each of which
-// may be any expression). The type is resolved using the same
-// "peer type resolution" process the compiler itself uses when
-// inferring types.
+// Devuelve el tipo común a todos los parámetros de entrada (cada uno de los cuales puede ser cualquier expresión). El tipo se resuelve utilizando el mismo proceso de "resolución de tipo entre pares" que el compilador mismo utiliza al inferir tipos.
 //
-// (Notice how the two functions which return types start with
-// uppercase letters? This is a standard naming practice in Zig.)
+// (¿Notaste cómo las dos funciones que devuelven tipos comienzan con letras mayúsculas? Esta es una práctica de nomenclatura estándar en Zig.)
 //
 const print = @import("std").debug.print;
 
@@ -46,6 +35,8 @@ const Narcissus = struct {
     me: *Narcissus = undefined,
     myself: *Narcissus = undefined,
     echo: void = undefined, // Alas, poor Echo!
+
+
 
     fn fetchTheMostBeautifulType() type {
         return @This();
@@ -58,19 +49,19 @@ pub fn main() void {
     // Oops! We cannot leave the 'me' and 'myself' fields
     // undefined. Please set them here:
     narcissus.me = &narcissus;
-    narcissus.??? = ???;
+    narcissus.myself = &narcissus;
 
-    // This determines a "peer type" from three separate
-    // references (they just happen to all be the same object).
-    const Type1 = @TypeOf(narcissus, narcissus.me.*, narcissus.myself.*);
+    // Esto determina un "tipo par" a partir de tres referencias separadas
+    // (que casualmente son el mismo objeto).
+    const Type1 = @TypeOf( narcissus, narcissus.me.*, narcissus.myself.* );
 
-    // Oh dear, we seem to have done something wrong when calling
-    // this function. We called it as a method, which would work
-    // if it had a self parameter. But it doesn't. (See above.)
+    // Oh vaya, parece que hemos hecho algo mal al llamar
+    // a esta función. La llamamos como un método, lo cual funcionaría
+    // si tuviera un parámetro self. Pero no lo tiene. (Ver arriba.)
     //
-    // The fix for this is very subtle, but it makes a big
-    // difference!
-    const Type2 = narcissus.fetchTheMostBeautifulType();
+    // La solución para esto es muy sutil, ¡pero hace una gran
+    // diferencia!
+    const Type2 = Narcissus.fetchTheMostBeautifulType();
 
     // Now we print a pithy statement about Narcissus.
     print("A {s} loves all {s}es. ", .{
@@ -109,15 +100,15 @@ pub fn main() void {
     // Please complete these 'if' statements so that the field
     // name will not be printed if the field is of type 'void'
     // (which is a zero-bit type that takes up no space at all!):
-    if (fields[0].??? != void) {
+    if (fields[0].type != void) {
         print(" {s}", .{@typeInfo(Narcissus).Struct.fields[0].name});
     }
 
-    if (fields[1].??? != void) {
+    if (fields[1].type != void) {
         print(" {s}", .{@typeInfo(Narcissus).Struct.fields[1].name});
     }
 
-    if (fields[2].??? != void) {
+    if (fields[2].type != void) {
         print(" {s}", .{@typeInfo(Narcissus).Struct.fields[2].name});
     }
 
@@ -132,17 +123,17 @@ pub fn main() void {
     print(".\n", .{});
 }
 
-// NOTE: This exercise did not originally include the function below.
-// But a change after Zig 0.10.0 added the source file name to the
-// type. "Narcissus" became "065_builtins2.Narcissus".
+// NOTE: Este ejercicio no incluyó originalmente la función de abajo.
+// Pero un cambio después de Zig 0.10.0 añadió el nombre del archivo fuente al
+// tipo. "Narcissus" se convirtió en "065_builtins2.Narcissus".
 //
-// To fix this, I've added this function to strip the filename from
-// the front of the type name in the dumbest way possible. (It returns
-// a slice of the type name starting at character 14 (assuming
-// single-byte characters).
+// Para solucionar esto, he añadido esta función para eliminar el nombre del archivo
+// del principio del nombre del tipo de la manera más tonta posible. (Devuelve
+// un slice del nombre del tipo comenzando en el carácter 14 (asumiendo
+// caracteres de un solo byte).
 //
-// We'll be seeing @typeName again in Exercise 070. For now, you can
-// see that it takes a Type and returns a u8 "string".
+// Veremos @typeName de nuevo en el Ejercicio 070. Por ahora, puedes
+// ver que toma un Tipo y devuelve una "cadena" u8.
 fn maximumNarcissism(myType: anytype) []const u8 {
     // Turn '065_builtins2.Narcissus' into 'Narcissus'
     return @typeName(myType)[14..];

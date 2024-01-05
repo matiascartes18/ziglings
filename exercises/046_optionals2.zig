@@ -1,27 +1,27 @@
 //
-// Now that we have optional types, we can apply them to structs.
-// The last time we checked in with our elephants, we had to link
-// all three of them together in a "circle" so that the last tail
-// linked to the first elephant. This is because we had NO CONCEPT
-// of a tail that didn't point to another elephant!
+// Ahora que tenemos tipos opcionales, podemos aplicarlos a las estructuras.
+// La última vez que revisamos con nuestros elefantes, tuvimos que enlazar
+// los tres juntos en un "círculo" para que la última cola
+// estuviera enlazada al primer elefante. ¡Esto se debe a que NO TENÍAMOS
+// ningún concepto de una cola que no apuntara a otro elefante!
 //
-// We also introduce the handy ".?" shortcut:
+// También introducimos el práctico atajo ".?":
 //
 //     const foo = bar.?;
 //
-// is the same as
+// es lo mismo que
 //
 //     const foo = bar orelse unreachable;
 //
-// See if you can find where we use this shortcut below.
+// Veamos si puedes encontrar dónde usamos este atajo a continuación.
 //
-// Now let's make those elephant tails optional!
+// ¡Ahora hagamos esas colas de elefante opcionales!
 //
 const std = @import("std");
 
 const Elephant = struct {
     letter: u8,
-    tail: *Elephant = null, // Hmm... tail needs something...
+    tail: ?*Elephant = null, // Hmm... tail needs something...
     visited: bool = false,
 };
 
@@ -51,7 +51,7 @@ fn visitElephants(first_elephant: *Elephant) void {
         // We should stop once we encounter a tail that
         // does NOT point to another element. What can
         // we put here to make that happen?
-        if (e.tail == null) ???;
+        if (e.tail == null) break;
 
         e = e.tail.?;
     }

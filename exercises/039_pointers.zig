@@ -1,24 +1,24 @@
 //
-// Check this out:
+// Mira esto:
 //
-//     var foo: u8 = 5;      // foo is 5
-//     var bar: *u8 = &foo;  // bar is a pointer
+//     var foo: u8 = 5;      // foo es 5
+//     var bar: *u8 = &foo;  // bar es un puntero
 //
-// What is a pointer? It's a reference to a value. In this example
-// bar is a reference to the memory space that currently contains the
-// value 5.
+// ¿Qué es un puntero? Es una referencia a un valor. En este ejemplo,
+// bar es una referencia al espacio de memoria que actualmente contiene
+// el valor 5.
 //
-// A cheatsheet given the above declarations:
+// Una hoja de trucos dada las declaraciones anteriores:
 //
-//     u8         the type of a u8 value
-//     foo        the value 5
-//     *u8        the type of a pointer to a u8 value
-//     &foo       a reference to foo
-//     bar        a pointer to the value at foo
-//     bar.*      the value 5 (the dereferenced value "at" bar)
+//     u8         el tipo de un valor u8
+//     foo        el valor 5
+//     *u8        el tipo de un puntero a un valor u8
+//     &foo       una referencia a foo
+//     bar        un puntero al valor en foo
+//     bar.*      el valor 5 (el valor desreferenciado "en" bar)
 //
-// We'll see why pointers are useful in a moment. For now, see if you
-// can make this example work!
+// Veremos por qué los punteros son útiles en un momento. ¡Por ahora,
+// intenta hacer que este ejemplo funcione!
 //
 const std = @import("std");
 
@@ -30,7 +30,7 @@ pub fn main() void {
 
     // Please make num2 equal 5 using num1_pointer!
     // (See the "cheatsheet" above for ideas.)
-    num2 = ???;
+    num2 = num1_pointer.*;
 
     std.debug.print("num1: {}, num2: {}\n", .{ num1, num2 });
 }

@@ -1,14 +1,11 @@
 //
-// Now let's use pointers to do something we haven't been
-// able to do before: pass a value by reference to a function.
+// Ahora vamos a usar punteros para hacer algo que no hemos podido hacer antes: pasar un valor por referencia a una función.
 //
-// Why would we wish to pass a pointer to an integer variable
-// rather than the integer value itself? Because then we are
-// allowed to *change* the value of the variable!
+// ¿Por qué querríamos pasar un puntero a una variable entera en lugar del valor entero en sí? ¡Porque entonces podemos *cambiar* el valor de la variable!
 //
 //     +-----------------------------------------------+
-//     | Pass by reference when you want to change the |
-//     | pointed-to value. Otherwise, pass the value.  |
+//     | Pasa por referencia cuando quieras cambiar el  |
+//     | valor apuntado. De lo contrario, pasa el valor.|
 //     +-----------------------------------------------+
 //
 const std = @import("std");
@@ -37,5 +34,5 @@ pub fn main() void {
 // This function should take a reference to a u8 value and set it
 // to 5.
 fn makeFive(x: *u8) void {
-    ??? = 5; // fix me!
+    x.* = 5; // fix me!
 }

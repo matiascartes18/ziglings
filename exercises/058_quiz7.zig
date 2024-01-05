@@ -1,40 +1,38 @@
 //
-// We've absorbed a lot of information about the variations of types
-// we can use in Zig. Roughly, in order we have:
+// Hemos absorbido mucha información sobre las variaciones de tipos que podemos usar en Zig. A grandes rasgos, en orden tenemos:
 //
-//                          u8  single item
-//                         *u8  single-item pointer
-//                        []u8  slice (size known at runtime)
-//                       [5]u8  array of 5 u8s
-//                       [*]u8  many-item pointer (zero or more)
-//                 enum {a, b}  set of unique values a and b
-//                error {e, f}  set of unique error values e and f
-//      struct {y: u8, z: i32}  group of values y and z
-// union(enum) {a: u8, b: i32}  single value either u8 or i32
+//                          u8  elemento único
+//                         *u8  puntero a un solo elemento
+//                        []u8  slice (tamaño conocido en tiempo de ejecución)
+//                       [5]u8  arreglo de 5 elementos u8
+//                       [*]u8  puntero a varios elementos (cero o más)
+//                 enum {a, b}  conjunto de valores únicos a y b
+//                error {e, f}  conjunto de valores de error únicos e y f
+//      struct {y: u8, z: i32}  grupo de valores y y z
+// union(enum) {a: u8, b: i32}  valor único que puede ser u8 o i32
 //
-// Values of any of the above types can be assigned as "var" or "const"
-// to allow or disallow changes (mutability) via the assigned name:
+// Valores de cualquiera de los tipos anteriores pueden ser asignados como "var" o "const"
+// para permitir o no cambios (mutabilidad) a través del nombre asignado:
 //
-//     const a: u8 = 5; // immutable
-//       var b: u8 = 5; //   mutable
+//     const a: u8 = 5; // inmutable
+//       var b: u8 = 5; // mutable
 //
-// We can also make error unions or optional types from any of
-// the above:
+// También podemos crear uniones de error o tipos opcionales a partir de cualquiera de los anteriores:
 //
-//     var a: E!u8 = 5; // can be u8 or error from set E
-//     var b: ?u8 = 5;  // can be u8 or null
+//     var a: E!u8 = 5; // puede ser u8 o error del conjunto E
+//     var b: ?u8 = 5;  // puede ser u8 o null
 //
-// Knowing all of this, maybe we can help out a local hermit. He made
-// a little Zig program to help him plan his trips through the woods,
-// but it has some mistakes.
+// Sabiendo todo esto, tal vez podamos ayudar a un ermitaño local. Él hizo
+// un pequeño programa en Zig para ayudarlo a planificar sus viajes por el bosque,
+// pero tiene algunos errores.
 //
 // *************************************************************
-// *                A NOTE ABOUT THIS EXERCISE                 *
+// *                UNA NOTA SOBRE ESTE EJERCICIO               *
 // *                                                           *
-// * You do NOT have to read and understand every bit of this  *
-// * program. This is a very big example. Feel free to skim    *
-// * through it and then just focus on the few parts that are  *
-// * actually broken!                                          *
+// * No es necesario leer y entender cada parte de este        *
+// * programa. Es un ejemplo muy grande. Siéntete libre de      *
+// * revisarlo rápidamente y luego enfócate en las pocas partes *
+// * que están realmente rotas.                                *
 // *                                                           *
 // *************************************************************
 //
@@ -43,13 +41,12 @@ const print = @import("std").debug.print;
 // The grue is a nod to Zork.
 const TripError = error{ Unreachable, EatenByAGrue };
 
-// Let's start with the Places on the map. Each has a name and a
-// distance or difficulty of travel (as judged by the hermit).
+// Comencemos con los Lugares en el mapa. Cada uno tiene un nombre y una
+// distancia o dificultad de viaje (según lo juzgado por el ermitaño).
 //
-// Note that we declare the places as mutable (var) because we need to
-// assign the paths later. And why is that? Because paths contain
-// pointers to places and assigning them now would create a dependency
-// loop!
+// Observa que declaramos los lugares como mutables (var) porque necesitamos
+// asignar los caminos más tarde. ¿Y por qué es eso? Porque los caminos contienen
+// punteros a lugares y asignarlos ahora crearía un bucle de dependencia.
 const Place = struct {
     name: []const u8,
     paths: []const Path = undefined,
@@ -85,25 +82,25 @@ var f = Place{ .name = "Fox Pond" };
 //  |                ~~~~~                              |
 //  +---------------------------------------------------+
 //
-// We'll be reserving memory in our program based on the number of
-// places on the map. Note that we do not have to specify the type of
-// this value because we don't actually use it in our program once
-// it's compiled! (Don't worry if this doesn't make sense yet.)
+// Reservaremos memoria en nuestro programa basado en la cantidad de
+// lugares en el mapa. Ten en cuenta que no tenemos que especificar el tipo de
+// este valor porque en realidad no lo usamos en nuestro programa una vez
+// que se compila. (No te preocupes si esto no tiene sentido aún.)
 const place_count = 6;
 
-// Now let's create all of the paths between sites. A path goes from
-// one place to another and has a distance.
+// Ahora creemos todos los caminos entre los lugares. Un camino va desde
+// un lugar a otro y tiene una distancia.
 const Path = struct {
     from: *const Place,
     to: *const Place,
     dist: u8,
 };
 
-// By the way, if the following code seems like a lot of tedious
-// manual labor, you're right! One of Zig's killer features is letting
-// us write code that runs at compile time to "automate" repetitive
-// code (much like macros in other languages), but we haven't learned
-// how to do that yet!
+// Por cierto, si el siguiente código parece mucho trabajo manual tedioso,
+// ¡tienes razón! Una de las características destacadas de Zig es permitirnos
+// escribir código que se ejecuta en tiempo de compilación para "automatizar"
+// código repetitivo (similar a las macros en otros lenguajes), pero aún no hemos
+// aprendido cómo hacerlo.
 const a_paths = [_]Path{
     Path{
         .from = &a, // from: Archer's Point
@@ -177,10 +174,10 @@ const f_paths = [_]Path{
     },
 };
 
-// Once we've plotted the best course through the woods, we'll make a
-// "trip" out of it. A trip is a series of Places connected by Paths.
-// We use a TripItem union to allow both Places and Paths to be in the
-// same array.
+// Una vez que hayamos trazado el mejor curso a través del bosque, haremos un
+// "viaje" de ello. Un viaje es una serie de Lugares conectados por Caminos.
+// Usamos una unión TripItem para permitir que tanto Lugares como Caminos estén en el
+// mismo arreglo.
 const TripItem = union(enum) {
     place: *const Place,
     path: *const Path,
@@ -189,21 +186,21 @@ const TripItem = union(enum) {
     // types of item correctly.
     fn printMe(self: TripItem) void {
         switch (self) {
-            // Oops! The hermit forgot how to capture the union values
-            // in a switch statement. Please capture both values as
-            // 'p' so the print statements work!
-            .place => print("{s}", .{p.name}),
-            .path => print("--{}->", .{p.dist}),
+            // ¡Ups! El ermitaño olvidó cómo capturar los valores de la unión
+            // en una declaración switch. Por favor, captura ambos valores como
+            // 'p' para que las declaraciones de impresión funcionen correctamente.
+            .place  => |p| print("{s}", .{p.name}),
+            .path  => |p| print("--{}->", .{p.dist}),
         }
     }
 };
 
-// The Hermit's Notebook is where all the magic happens. A notebook
-// entry is a Place discovered on the map along with the Path taken to
-// get there and the distance to reach it from the start point. If we
-// find a better Path to reach a Place (shorter distance), we update the
-// entry. Entries also serve as a "todo" list which is how we keep
-// track of which paths to explore next.
+// El Cuaderno del Ermitaño es donde ocurre toda la magia. Una entrada del cuaderno
+// es un Lugar descubierto en el mapa junto con el Camino tomado para llegar allí y
+// la distancia para alcanzarlo desde el punto de inicio. Si encontramos un Camino mejor
+// para llegar a un Lugar (distancia más corta), actualizamos la entrada. Las entradas también
+// sirven como una lista de "pendientes" que es cómo llevamos un registro de qué caminos
+// explorar a continuación.
 const NotebookEntry = struct {
     place: *const Place,
     coming_from: ?*const Place,
@@ -224,54 +221,53 @@ const NotebookEntry = struct {
 // +---+----------------+----------------+----------+
 //
 const HermitsNotebook = struct {
-    // Remember the array repetition operator `**`? It is no mere
-    // novelty, it's also a great way to assign multiple items in an
-    // array without having to list them one by one. Here we use it to
-    // initialize an array with null values.
+    // ¿Recuerdas el operador de repetición de matrices `**`? No es solo una novedad,
+    // también es una excelente manera de asignar múltiples elementos en una matriz
+    // sin tener que enumerarlos uno por uno. Aquí lo usamos para inicializar una matriz
+    // con valores nulos.
     entries: [place_count]?NotebookEntry = .{null} ** place_count,
 
-    // The next entry keeps track of where we are in our "todo" list.
+    // La siguiente entrada lleva un registro de dónde estamos en nuestra lista de "pendientes".
     next_entry: u8 = 0,
 
-    // Mark the start of empty space in the notebook.
+    // Marca el inicio del espacio vacío en el cuaderno.
     end_of_entries: u8 = 0,
 
-    // We'll often want to find an entry by Place. If one is not
-    // found, we return null.
+    // A menudo querremos encontrar una entrada por Lugar. Si no se encuentra una,
+    // devolvemos null.
     fn getEntry(self: *HermitsNotebook, place: *const Place) ?*NotebookEntry {
         for (&self.entries, 0..) |*entry, i| {
             if (i >= self.end_of_entries) break;
 
-            // Here's where the hermit got stuck. We need to return
-            // an optional pointer to a NotebookEntry.
+            // Aquí es donde el ermitaño se quedó atascado. Necesitamos devolver
+            // un puntero opcional a una entrada de Notebook (NotebookEntry).
             //
-            // What we have with "entry" is the opposite: a pointer to
-            // an optional NotebookEntry!
+            // Lo que tenemos con "entry" es lo opuesto: ¡un puntero a
+            // una entrada de Notebook opcional!
             //
-            // To get one from the other, we need to dereference
-            // "entry" (with .*) and get the non-null value from the
-            // optional (with .?) and return the address of that. The
-            // if statement provides some clues about how the
-            // dereference and optional value "unwrapping" look
-            // together. Remember that you return the address with the
-            // "&" operator.
-            if (place == entry.*.?.place) return entry;
-            // Try to make your answer this long:__________;
+            // Para obtener uno del otro, necesitamos desreferenciar
+            // "entry" (con .*) y obtener el valor no nulo del
+            // opcional (con .?) y devolver la dirección de eso. El
+            // if proporciona algunas pistas sobre cómo se ven
+            // juntos la desreferencia y el "desenvolvimiento" del valor opcional.
+            // Recuerda que devuelves la dirección con el
+            // operador "&".
+            if (place == entry.*.?.place) return &entry.*.?;
+            // Intenta que tu respuesta sea tan larga:__________;
         }
         return null;
     }
 
-    // The checkNote() method is the beating heart of the magical
-    // notebook. Given a new note in the form of a NotebookEntry
-    // struct, we check to see if we already have an entry for the
-    // note's Place.
+    // El método checkNote() es el corazón latiente del cuaderno mágico.
+    // Dada una nueva nota en forma de una estructura NotebookEntry,
+    // verificamos si ya tenemos una entrada para el Lugar de la nota.
     //
-    // If we DON'T, we'll add the entry to the end of the notebook
-    // along with the Path taken and distance.
+    // Si NO la tenemos, agregamos la entrada al final del cuaderno
+    // junto con el Camino tomado y la distancia.
     //
-    // If we DO, we check to see if the path is "better" (shorter
-    // distance) than the one we'd noted before. If it is, we
-    // overwrite the old entry with the new one.
+    // Si SÍ la tenemos, verificamos si el camino es "mejor" (distancia más corta)
+    // que el que habíamos anotado anteriormente. Si lo es, sobrescribimos
+    // la antigua entrada con la nueva.
     fn checkNote(self: *HermitsNotebook, note: NotebookEntry) void {
         const existing_entry = self.getEntry(note.place);
 
@@ -294,22 +290,24 @@ const HermitsNotebook = struct {
         return &self.entries[self.next_entry].?;
     }
 
-    // After we've completed our search of the map, we'll have
-    // computed the shortest Path to every Place. To collect the
-    // complete trip from the start to the destination, we need to
-    // walk backwards from the destination's notebook entry, following
-    // the coming_from pointers back to the start. What we end up with
-    // is an array of TripItems with our trip in reverse order.
+    // Después de completar nuestra búsqueda en el mapa, habremos
+    // calculado el camino más corto hacia cada Lugar. Para recopilar
+    // el viaje completo desde el inicio hasta el destino, necesitamos
+    // caminar hacia atrás desde la entrada del cuaderno del destino,
+    // siguiendo los punteros coming_from hasta el inicio. Lo que
+    // obtenemos es una matriz de TripItems con nuestro viaje en orden
+    // inverso.
     //
-    // We need to take the trip array as a parameter because we want
-    // the main() function to "own" the array memory. What do you
-    // suppose could happen if we allocated the array in this
-    // function's stack frame (the space allocated for a function's
-    // "local" data) and returned a pointer or slice to it?
+    // Necesitamos tomar la matriz de viaje como parámetro porque
+    // queremos que la función main() sea la "dueña" de la memoria de
+    // la matriz. ¿Qué crees que podría suceder si asignamos la matriz
+    // en el marco de pila de esta función (el espacio asignado para
+    // los datos "locales" de una función) y devolvemos un puntero o
+    // una rebanada a ella?
     //
-    // Looks like the hermit forgot something in the return value of
-    // this function. What could that be?
-    fn getTripTo(self: *HermitsNotebook, trip: []?TripItem, dest: *Place) void {
+    // Parece que el ermitaño olvidó algo en el valor de retorno de
+    // esta función. ¿Qué podría ser eso?
+    fn getTripTo(self: *HermitsNotebook, trip: []?TripItem, dest: *Place) !void {
         // We start at the destination entry.
         const destination_entry = self.getEntry(dest);
 
@@ -358,10 +356,7 @@ pub fn main() void {
     const start = &a; // Archer's Point
     const destination = &f; // Fox Pond
 
-    // Store each Path array as a slice in each Place. As mentioned
-    // above, we needed to delay making these references to avoid
-    // creating a dependency loop when the compiler is trying to
-    // figure out how to allocate space for each item.
+    // Almacenar cada arreglo de caminos como una rebanada en cada Lugar. Como se mencionó anteriormente, necesitamos retrasar estas referencias para evitar crear un bucle de dependencia cuando el compilador intenta determinar cómo asignar espacio para cada elemento.
     a.paths = a_paths[0..];
     b.paths = b_paths[0..];
     c.paths = c_paths[0..];
@@ -369,10 +364,10 @@ pub fn main() void {
     e.paths = e_paths[0..];
     f.paths = f_paths[0..];
 
-    // Now we create an instance of the notebook and add the first
-    // "start" entry. Note the null values. Read the comments for the
-    // checkNote() method above to see how this entry gets added to
-    // the notebook.
+    // Ahora creamos una instancia del cuaderno y agregamos la primera
+    // entrada "start". Observa los valores nulos. Lee los comentarios
+    // del método checkNote() anterior para ver cómo se agrega esta
+    // entrada al cuaderno.
     var notebook = HermitsNotebook{};
     var working_note = NotebookEntry{
         .place = start,
@@ -382,17 +377,14 @@ pub fn main() void {
     };
     notebook.checkNote(working_note);
 
-    // Get the next entry from the notebook (the first being the
-    // "start" entry we just added) until we run out, at which point
-    // we'll have checked every reachable Place.
+    // Obtén la siguiente entrada del cuaderno (siendo la primera la
+    // entrada "start" que acabamos de agregar) hasta que no haya más,
+    // momento en el que habremos revisado todos los Lugares alcanzables.
     while (notebook.hasNextEntry()) {
         const place_entry = notebook.getNextEntry();
 
-        // For every Path that leads FROM the current Place, create a
-        // new note (in the form of a NotebookEntry) with the
-        // destination Place and the total distance from the start to
-        // reach that place. Again, read the comments for the
-        // checkNote() method to see how this works.
+        // Para cada Camino que lleva DESDE el Lugar actual, crea una
+        // nueva nota (en forma de NotebookEntry) con el Lugar de destino y la distancia total desde el inicio para llegar a ese lugar. Nuevamente, lee los comentarios del método checkNote() para ver cómo funciona esto.
         for (place_entry.place.paths) |*path| {
             working_note = NotebookEntry{
                 .place = path.to,
@@ -404,11 +396,7 @@ pub fn main() void {
         }
     }
 
-    // Once the loop above is complete, we've calculated the shortest
-    // path to every reachable Place! What we need to do now is set
-    // aside memory for the trip and have the hermit's notebook fill
-    // in the trip from the destination back to the path. Note that
-    // this is the first time we've actually used the destination!
+    // Una vez que se completa el bucle anterior, ¡hemos calculado el camino más corto hacia cada Lugar alcanzable! Lo que necesitamos hacer ahora es reservar memoria para el viaje y hacer que el cuaderno del ermitaño complete el viaje desde el destino hasta el inicio. ¡Ten en cuenta que esta es la primera vez que realmente usamos el destino!
     var trip = [_]?TripItem{null} ** (place_count * 2);
 
     notebook.getTripTo(trip[0..], destination) catch |err| {
@@ -420,11 +408,12 @@ pub fn main() void {
     printTrip(trip[0..]);
 }
 
-// Remember that trips will be a series of alternating TripItems
-// containing a Place or Path from the destination back to the start.
-// The remaining space in the trip array will contain null values, so
-// we need to loop through the items in reverse, skipping nulls, until
-// we reach the destination at the front of the array.
+// Recuerda que los viajes serán una serie de TripItems alternados
+// que contienen un Lugar o un Camino desde el destino hasta el inicio.
+// El espacio restante en el arreglo de viaje contendrá valores nulos, por lo que
+// necesitamos recorrer los elementos en orden inverso, saltando los nulos, hasta
+// llegar al destino al principio del arreglo.
+//
 fn printTrip(trip: []?TripItem) void {
     // We convert the usize length to a u8 with @intCast(), a
     // builtin function just like @import().  We'll learn about
@@ -440,32 +429,14 @@ fn printTrip(trip: []?TripItem) void {
     print("\n", .{});
 }
 
-// Going deeper:
+// Profundizando:
 //
-// In computer science terms, our map places are "nodes" or "vertices" and
-// the paths are "edges". Together, they form a "weighted, directed
-// graph". It is "weighted" because each path has a distance (also
-// known as a "cost"). It is "directed" because each path goes FROM
-// one place TO another place (undirected graphs allow you to travel
-// on an edge in either direction).
+// En términos de ciencias de la computación, nuestros lugares en el mapa son "nodos" o "vértices" y los caminos son "aristas". Juntos, forman un "grafo ponderado y dirigido". Es "ponderado" porque cada camino tiene una distancia (también conocida como "costo"). Es "dirigido" porque cada camino va DESDE un lugar HACIA otro lugar (los grafos no dirigidos te permiten viajar en una arista en ambas direcciones).
 //
-// Since we append new notebook entries at the end of the list and
-// then explore each sequentially from the beginning (like a "todo"
-// list), we are treating the notebook as a "First In, First Out"
-// (FIFO) queue.
+// Dado que agregamos nuevas entradas en el cuaderno al final de la lista y luego exploramos cada una secuencialmente desde el principio (como una lista de "tareas pendientes"), tratamos el cuaderno como una cola "Primero en entrar, primero en salir" (FIFO).
 //
-// Since we examine all closest paths first before trying further ones
-// (thanks to the "todo" queue), we are performing a "Breadth-First
-// Search" (BFS).
+// Dado que examinamos todos los caminos más cercanos primero antes de probar otros más lejanos (gracias a la cola de "tareas pendientes"), estamos realizando una "Búsqueda en Anchura" (BFS).
 //
-// By tracking "lowest cost" paths, we can also say that we're
-// performing a "least-cost search".
+// Al rastrear los caminos de "menor costo", también podemos decir que estamos realizando una "búsqueda de menor costo".
 //
-// Even more specifically, the Hermit's Notebook most closely
-// resembles the Shortest Path Faster Algorithm (SPFA), attributed to
-// Edward F. Moore. By replacing our simple FIFO queue with a
-// "priority queue", we would basically have Dijkstra's algorithm. A
-// priority queue retrieves items sorted by "weight" (in our case, it
-// would keep the paths with the shortest distance at the front of the
-// queue). Dijkstra's algorithm is more efficient because longer paths
-// can be eliminated more quickly. (Work it out on paper to see why!)
+// Aún más específicamente, el Cuaderno del Ermitaño se asemeja más al Algoritmo de Ruta Más Corta Más Rápida (SPFA), atribuido a Edward F. Moore. Al reemplazar nuestra simple cola FIFO con una "cola de prioridad", básicamente tendríamos el algoritmo de Dijkstra. Una cola de prioridad recupera elementos ordenados por "peso" (en nuestro caso, mantendría los caminos con la distancia más corta al frente de la cola). El algoritmo de Dijkstra es más eficiente porque los caminos más largos se pueden eliminar más rápidamente. (Hazlo en papel para ver por qué!)

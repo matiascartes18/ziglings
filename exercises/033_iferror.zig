@@ -1,26 +1,26 @@
 //
-// Let's revisit the very first error exercise. This time, we're going to
-// look at an error-handling variation of the "if" statement.
+// Vamos a revisar el primer ejercicio de manejo de errores. Esta vez, vamos a
+// ver una variación del enunciado "if" para manejar errores.
 //
-//     if (foo) |value| {
+//     if (foo) |valor| {
 //
-//         // foo was NOT an error; value is the non-error value of foo
+//         // foo NO fue un error; valor es el valor no-error de foo
 //
 //     } else |err| {
 //
-//         // foo WAS an error; err is the error value of foo
+//         // foo FUE un error; err es el valor de error de foo
 //
 //     }
 //
-// We'll take it even further and use a switch statement to handle
-// the error types.
-//
-//     if (foo) |value| {
+// Vamos a llevarlo aún más lejos y usar una declaración switch para manejar
+// los tipos de error.
+
+//     if (foo) |valor| {
 //         ...
 //     } else |err| switch(err) {
 //         ...
-//     }
-//
+// }
+
 const MyNumberError = error{
     TooBig,
     TooSmall,
@@ -39,6 +39,7 @@ pub fn main() void {
             std.debug.print("={}. ", .{value});
         } else |err| switch (err) {
             MyNumberError.TooBig => std.debug.print(">4. ", .{}),
+            MyNumberError.TooSmall => std.debug.print("<4. ", .{}),
             // Please add a match for TooSmall here and have it print: "<4. "
         }
     }

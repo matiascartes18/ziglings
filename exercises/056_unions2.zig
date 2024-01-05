@@ -1,10 +1,10 @@
 //
-// It is really quite inconvenient having to manually keep track
-// of the active field in our union, isn't it?
+// Es realmente bastante incómodo tener que realizar un seguimiento manual
+// del campo activo en nuestra unión, ¿verdad?
 //
-// Thankfully, Zig also has "tagged unions", which allow us to
-// store an enum value within our union representing which field
-// is active.
+// Afortunadamente, Zig también tiene "uniones etiquetadas", que nos permiten
+// almacenar un valor de enum dentro de nuestra unión que representa qué campo
+// está activo.
 //
 //     const FooTag = enum{ small, medium, large };
 //
@@ -14,19 +14,19 @@
 //         large: u64,
 //     };
 //
-// Now we can use a switch directly on the union to act on the
-// active field:
+// Ahora podemos usar un switch directamente en la unión para actuar sobre el
+// campo activo:
 //
 //     var f = Foo{ .small = 10 };
 //
 //     switch (f) {
-//         .small => |my_small| do_something(my_small),
-//         .medium => |my_medium| do_something(my_medium),
-//         .large => |my_large| do_something(my_large),
+//         .small => |my_small| hacer_algo(my_small),
+//         .medium => |my_medium| hacer_algo(my_medium),
+//         .large => |my_large| hacer_algo(my_large),
 //     }
 //
-// Let's make our Insects use a tagged union (Doctor Zoraptera
-// approves).
+// Hagamos que nuestros Insectos usen una unión etiquetada (Doctor Zoraptera
+// lo aprueba).
 //
 const std = @import("std");
 
@@ -44,21 +44,20 @@ pub fn main() void {
     std.debug.print("Insect report! ", .{});
 
     // Could it really be as simple as just passing the union?
-    printInsect(???);
-    printInsect(???);
+    printInsect(ant);
+    printInsect(bee);
 
     std.debug.print("\n", .{});
 }
 
 fn printInsect(insect: Insect) void {
-    switch (???) {
+    switch (insect) {
         .still_alive => |a| std.debug.print("Ant alive is: {}. ", .{a}),
         .flowers_visited => |f| std.debug.print("Bee visited {} flowers. ", .{f}),
     }
 }
 
-// By the way, did unions remind you of optional values and errors?
-// Optional values are basically "null unions" and errors use "error
-// union types". Now we can add our own unions to the mix to handle
-// whatever situations we might encounter:
+// Por cierto, ¿las uniones te recordaron a los valores opcionales y los errores?
+// Los valores opcionales son básicamente "uniones nulas" y los errores utilizan "tipos de unión de errores".
+// Ahora podemos agregar nuestras propias uniones para manejar cualquier situación que podamos encontrar:
 //          union(Tag) { value: u32, toxic_ooze: void }

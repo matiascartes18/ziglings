@@ -29,6 +29,7 @@ pub fn main() void {
             // ...
             25 => 'Y',
             26 => 'Z',
+            else => '!'
             // As in the last exercise, please add the 'else' clause
             // and this time, have it return an exclamation mark '!'.
         };
@@ -37,6 +38,5 @@ pub fn main() void {
         // Note: "{c}" forces print() to display the value as a character.
         // Can you guess what happens if you remove the "c"? Try it!
     }
-
     std.debug.print("\n", .{});
 }

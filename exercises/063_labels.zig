@@ -1,53 +1,51 @@
 //
-// Loop bodies are blocks, which are also expressions. We've seen
-// how they can be used to evaluate and return values. To further
-// expand on this concept, it turns out we can also give names to
-// blocks by applying a 'label':
+// Los cuerpos de los bucles son bloques, que también son expresiones. Hemos visto
+// cómo se pueden usar para evaluar y devolver valores. Para expandir aún más
+// este concepto, resulta que también podemos dar nombres a los bloques mediante
+// la aplicación de una 'etiqueta':
 //
-//     my_label: { ... }
+//     mi_etiqueta: { ... }
 //
-// Once you give a block a label, you can use 'break' to exit
-// from that block.
+// Una vez que le das a un bloque una etiqueta, puedes usar 'break' para salir
+// de ese bloque.
 //
-//     outer_block: {           // outer block
-//         while (true) {       // inner block
-//             break :outer_block;
+//     bloque_exterior: {           // bloque exterior
+//         while (true) {       // bloque interior
+//             break :bloque_exterior;
 //         }
 //         unreachable;
 //     }
 //
-// As we've just learned, you can return a value using a break
-// statement. Does that mean you can return a value from any
-// labeled block? Yes it does!
+// Como acabamos de aprender, puedes devolver un valor usando una declaración de break.
+// ¿Eso significa que puedes devolver un valor desde cualquier bloque etiquetado? ¡Sí lo hace!
 //
-//     const foo = make_five: {
-//         const five = 1 + 1 + 1 + 1 + 1;
-//         break :make_five five;
+//     const foo = hacer_cinco: {
+//         const cinco = 1 + 1 + 1 + 1 + 1;
+//         break :hacer_cinco cinco;
 //     };
 //
-// Labels can also be used with loops. Being able to break out of
-// nested loops at a specific level is one of those things that
-// you won't use every day, but when the time comes, it's
-// incredibly convenient. Being able to return a value from an
-// inner loop is sometimes so handy, it almost feels like cheating
-// (and can help you avoid creating a lot of temporary variables).
+// Las etiquetas también se pueden usar con bucles. Poder salir de
+// bucles anidados en un nivel específico es una de esas cosas que
+// no usarás todos los días, pero cuando llegue el momento, es
+// increíblemente conveniente. Poder devolver un valor desde un
+// bucle interno a veces es tan útil que casi parece hacer trampa
+// (y puede ayudarte a evitar crear muchas variables temporales).
 //
-//     const bar: u8 = two_loop: while (true) {
+//     const bar: u8 = dos_bucles: while (true) {
 //         while (true) {
-//             break :two_loop 2;
+//             break :dos_bucles 2;
 //         }
 //     } else 0;
 //
-// In the above example, the break exits from the outer loop
-// labeled "two_loop" and returns the value 2. The else clause is
-// attached to the outer two_loop and would be evaluated if the
-// loop somehow ended without the break having been called.
+// En el ejemplo anterior, el break sale del bucle exterior
+// etiquetado como "dos_bucles" y devuelve el valor 2. La cláusula else está
+// adjunta al dos_bucles externo y se evaluaría si el bucle terminara de alguna manera
+// sin haberse llamado al break.
 //
-// Finally, you can also use block labels with the 'continue'
-// statement:
+// Finalmente, también puedes usar etiquetas de bloque con la declaración 'continue':
 //
-//     my_while: while (true) {
-//         continue :my_while;
+//     mi_mientras: while (true) {
+//         continue :mi_mientras;
 //     }
 //
 const print = @import("std").debug.print;
@@ -106,7 +104,7 @@ pub fn main() void {
     const meal = food_loop: for (menu) |food| {
 
         // Now look at each required ingredient for the Food...
-        for (food.requires, 0..) |required, required_ingredient| {
+        ingredients_loop: for (food.requires, 0..) |required, required_ingredient| {
 
             // This ingredient isn't required, so skip it.
             if (!required) continue;
@@ -115,26 +113,28 @@ pub fn main() void {
             // (Remember that want_it will be the index number of
             // the ingredient based on its position in the
             // required ingredient list for each food.)
-            const found = for (wanted_ingredients) |want_it| {
-                if (required_ingredient == want_it) break true;
-            } else false;
-
+            // const found = for (wanted_ingredients) |want_it| {
+            //     if (required_ingredient == want_it) break true;
+            // } else false;
+            if (required_ingredient == wanted_ingredients[0] or required_ingredient == wanted_ingredients[1])
+             continue: ingredients_loop 
+             else continue: food_loop;
             // We did not find this required ingredient, so we
             // can't make this Food. Continue the outer loop.
-            if (!found) continue :food_loop;
+            //if (!found) continue :food_loop;
         }
 
-        // If we get this far, the required ingredients were all
-        // wanted for this Food.
+        // Si llegamos hasta aquí, todos los ingredientes requeridos
+        // fueron solicitados para esta comida.
         //
-        // Please return this Food from the loop.
-        break;
-    };
-    // ^ Oops! We forgot to return Mac & Cheese as the default
-    // Food when the requested ingredients aren't found.
+        // Por favor, devuelve esta comida desde el bucle.
+        break :food_loop food;
+    } else menu[0];
+    // ^ ¡Ups! Olvidamos devolver Mac & Cheese como la comida predeterminada
+    // cuando no se encuentran los ingredientes solicitados.
 
     print("Enjoy your {s}!\n", .{meal.name});
 }
 
-// Challenge: You can also do away with the 'found' variable in
-// the inner loop. See if you can figure out how to do that!
+// Desafío: ¡También puedes prescindir de la variable 'found' en el
+// bucle interno. ¡Veamos si puedes descubrir cómo hacerlo!

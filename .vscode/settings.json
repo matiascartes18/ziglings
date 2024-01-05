@@ -1,0 +1,16 @@
+{
+    "editor.fontFamily": "'Cascadia Code'",
+    "editor.fontSize": 15,
+    "terminal.integrated.cursorStyle": "line",
+    "terminal.integrated.cursorStyleInactive": "block",
+    "terminal.integrated.tabs.defaultColor": "terminal.ansiBlack",
+    "editor.guides.bracketPairs": true,
+    "rust-analyzer.typing.autoClosingAngleBrackets.enable": true,
+    "zig.zls.highlightGlobalVarDeclarations": true,
+    "zig.zls.inlayHintsHideRedundantParamNames": true,
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "editor.defaultColorDecorators": true,
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.fontLigatures": true
+}

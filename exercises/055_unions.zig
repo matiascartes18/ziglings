@@ -1,11 +1,7 @@
 //
-// A union lets you store different types and sizes of data at
-// the same memory address. How is this possible? The compiler
-// sets aside enough memory for the largest thing you might want
-// to store.
+// Unión te permite almacenar diferentes tipos y tamaños de datos en la misma dirección de memoria. ¿Cómo es esto posible? El compilador reserva suficiente memoria para el objeto más grande que puedas querer almacenar.
 //
-// In this example, an instance of Foo always takes up u64 of
-// space in memory even if you're currently storing a u8.
+// En este ejemplo, una instancia de Foo siempre ocupa 64 bits de espacio en memoria, incluso si actualmente estás almacenando un u8.
 //
 //     const Foo = union {
 //         small: u8,
@@ -13,42 +9,34 @@
 //         large: u64,
 //     };
 //
-// The syntax looks just like a struct, but a Foo can only hold a
-// small OR a medium OR a large value. Once a field becomes
-// active, the other inactive fields cannot be accessed. To
-// change active fields, assign a whole new instance:
+// La sintaxis se parece a la de una estructura, pero un Foo solo puede contener un valor small O medium O large. Una vez que un campo se vuelve activo, los otros campos inactivos no se pueden acceder. Para cambiar los campos activos, asigna una nueva instancia completa:
 //
 //     var f = Foo{ .small = 5 };
-//     f.small += 5;                  // OKAY
-//     f.medium = 5432;               // ERROR!
-//     f = Foo{ .medium = 5432 };     // OKAY
+//     f.small += 5;                  // BIEN
+//     f.medium = 5432;               // ¡ERROR!
+//     f = Foo{ .medium = 5432 };     // BIEN
 //
-// Unions can save space in memory because they let you "re-use"
-// a space in memory. They also provide a sort of primitive
-// polymorphism. Here fooBar() can take a Foo no matter what size
-// of unsigned integer it holds:
+// Las uniones pueden ahorrar espacio en memoria porque te permiten "reutilizar" un espacio en memoria. También proporcionan una especie de polimorfismo primitivo. Aquí, fooBar() puede tomar un Foo sin importar el tamaño del entero sin signo que contenga:
 //
 //     fn fooBar(f: Foo) void { ... }
 //
-// Oh, but how does fooBar() know which field is active? Zig has
-// a neat way of keeping track, but for now, we'll just have to
-// do it manually.
+// Pero, ¿cómo sabe fooBar() qué campo está activo? Zig tiene una forma ingeniosa de llevar un seguimiento, pero por ahora, tendremos que hacerlo manualmente.
 //
-// Let's see if we can get this program working!
+// ¡Veamos si podemos hacer que este programa funcione!
 //
 const std = @import("std");
 
-// We've just started writing a simple ecosystem simulation.
-// Insects will be represented by either bees or ants. Bees store
-// the number of flowers they've visited that day and ants just
-// store whether or not they're still alive.
+// Acabamos de comenzar a escribir una simulación simple de un ecosistema.
+// Los insectos serán representados por abejas o hormigas. Las abejas almacenan
+// el número de flores que han visitado ese día y las hormigas solo almacenan
+// si están vivas o no.
 const Insect = union {
     flowers_visited: u16,
     still_alive: bool,
 };
 
-// Since we need to specify the type of insect, we'll use an
-// enum (remember those?).
+// Dado que necesitamos especificar el tipo de insecto, usaremos una
+// enumeración (¿recuerdas eso?).
 const AntOrBee = enum { a, b };
 
 pub fn main() void {
@@ -59,8 +47,8 @@ pub fn main() void {
     std.debug.print("Insect report! ", .{});
 
     // Oops! We've made a mistake here.
-    printInsect(ant, AntOrBee.c);
-    printInsect(bee, AntOrBee.c);
+    printInsect(ant, AntOrBee.a);
+    printInsect(bee, AntOrBee.b);
 
     std.debug.print("\n", .{});
 }

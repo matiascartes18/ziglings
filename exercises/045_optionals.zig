@@ -1,26 +1,25 @@
 //
-// Sometimes you know that a variable might hold a value or
-// it might not. Zig has a neat way of expressing this idea
-// called Optionals. An optional type just has a '?' like this:
+// A veces sabes que una variable puede contener un valor o no.
+// Zig tiene una forma interesante de expresar esta idea llamada Optionals.
+// Un tipo opcional simplemente tiene un '?' así:
 //
 //     var foo: ?u32 = 10;
 //
-// Now foo can store a u32 integer OR null (a value storing
-// the cosmic horror of a value NOT EXISTING!)
+// Ahora foo puede almacenar un entero u32 O null (un valor que representa
+// el horror cósmico de que el valor NO EXISTA).
 //
 //     foo = null;
 //
-//     if (foo == null) beginScreaming();
+//     if (foo == null) comenzarAgritar();
 //
-// Before we can use the optional value as the non-null type
-// (a u32 integer in this case), we need to guarantee that it
-// isn't null. One way to do this is to THREATEN IT with the
-// "orelse" statement.
+// Antes de poder usar el valor opcional como el tipo no nulo
+// (un entero u32 en este caso), necesitamos garantizar que no sea null.
+// Una forma de hacer esto es AMENAZARLO con la declaración "orelse".
 //
 //     var bar = foo orelse 2;
 //
-// Here, bar will either equal the u32 integer value stored in
-// foo, or it will equal 2 if foo was null.
+// Aquí, bar será igual al valor entero u32 almacenado en foo,
+// o será igual a 2 si foo era null.
 //
 const std = @import("std");
 
@@ -29,7 +28,7 @@ pub fn main() void {
 
     // Please threaten the result so that answer is either the
     // integer value from deepThought() OR the number 42:
-    const answer: u8 = result;
+    const answer: u8 = result orelse 42;
 
     std.debug.print("The Ultimate Answer: {}.\n", .{answer});
 }

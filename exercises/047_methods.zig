@@ -1,27 +1,27 @@
-//
-// Help! Evil alien creatures have hidden eggs all over the Earth
-// and they're starting to hatch!
-//
-// Before you jump into battle, you'll need to know three things:
-//
-// 1. You can attach functions to structs (and other "type definitions"):
-//
+
+// ¡Ayuda! Criaturas alienígenas malvadas han escondido huevos por toda la Tierra
+// ¡y están empezando a eclosionar!
+
+// Antes de entrar en batalla, necesitarás saber tres cosas:
+
+// 1. Puedes adjuntar funciones a estructuras (y otras "definiciones de tipo"):
+
 //     const Foo = struct{
 //         pub fn hello() void {
-//             std.debug.print("Foo says hello!\n", .{});
+//             std.debug.print("¡Foo dice hola!\n", .{});
 //         }
 //     };
-//
-// 2. A function that is a member of a struct is "namespaced" within
-//    that struct and is called by specifying the "namespace" and then
-//    using the "dot syntax":
+
+// 2. Una función que es miembro de una estructura está "espaciada de nombres" dentro
+//    de esa estructura y se llama especificando el "espacio de nombres" y luego
+//    usando la sintaxis de "punto":
 //
 //     Foo.hello();
 //
-// 3. The NEAT feature of these functions is that if their first argument
-//    is an instance of the struct (or a pointer to one) then we can use
-//    the instance as the namespace instead of the type:
-//
+// 3. La característica GENIAL de estas funciones es que si su primer argumento
+//    es una instancia de la estructura (o un puntero a una) entonces podemos usar
+//    la instancia como el espacio de nombres en lugar del tipo:
+// 
 //     const Bar = struct{
 //         pub fn a(self: Bar) void {}
 //         pub fn b(this: *Bar, other: u8) void {}
@@ -29,18 +29,18 @@
 //     };
 //
 //    var bar = Bar{};
-//    bar.a() // is equivalent to Bar.a(bar)
-//    bar.b(3) // is equivalent to Bar.b(&bar, 3)
-//    bar.c() // is equivalent to Bar.c(&bar)
+//    bar.a() // es equivalente a Bar.a(bar)
+//    bar.b(3) // es equivalente a Bar.b(&bar, 3)
+//    bar.c() // es equivalente a Bar.c(&bar)
 //
-//    Notice that the name of the parameter doesn't matter. Some use
-//    self, others use a lowercase version of the type name, but feel
-//    free to use whatever is most appropriate.
+//    Observa que el nombre del parámetro no importa. Algunos usan
+//    self, otros usan una versión en minúsculas del nombre del tipo, pero siéntete
+//    libre de usar lo que sea más apropiado.
 //
-// Okay, you're armed.
+// Bien, estás armado.
 //
-// Now, please zap the alien structs until they're all gone or
-// Earth will be doomed!
+// Ahora, por favor, zapea las estructuras alienígenas hasta que todas desaparezcan o
+// ¡la Tierra estará condenada!
 //
 const std = @import("std");
 
@@ -88,14 +88,14 @@ pub fn main() void {
         for (&aliens) |*alien| {
 
             // *** Zap the alien with the heat ray here! ***
-            ???.zap(???);
+            heat_ray.zap(alien);
 
             // If the alien's health is still above 0, it's still alive.
             if (alien.health > 0) aliens_alive += 1;
         }
 
         std.debug.print("{} aliens. ", .{aliens_alive});
-    }
+    }       
 
     std.debug.print("Earth is saved!\n", .{});
 }

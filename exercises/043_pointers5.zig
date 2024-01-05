@@ -1,37 +1,31 @@
 //
-// As with integers, you can pass a pointer to a struct when you
-// will wish to modify that struct. Pointers are also useful when
-// you need to store a reference to a struct (a "link" to it).
-//
+// Al igual que con los enteros, puedes pasar un puntero a una estructura cuando desees modificar esa estructura. Los punteros también son útiles cuando necesitas almacenar una referencia a una estructura (un "enlace" a ella).
+
 //     const Vertex = struct{ x: u32, y: u32, z: u32 };
-//
+
 //     var v1 = Vertex{ .x=3, .y=2, .z=5 };
-//
-//     var pv: *Vertex = &v1;   // <-- a pointer to our struct
-//
-// Note that you don't need to dereference the "pv" pointer to access
-// the struct's fields:
-//
-//     YES: pv.x
+
+//     var pv: *Vertex = &v1;   // <-- un puntero a nuestra estructura
+
+// Ten en cuenta que no necesitas desreferenciar el puntero "pv" para acceder a los campos de la estructura:
+
+//     SÍ: pv.x
 //     NO:  pv.*.x
-//
-// We can write functions that take pointers to structs as
-// arguments. This foo() function modifies struct v:
-//
+
+// Podemos escribir funciones que tomen punteros a estructuras como argumentos. Esta función foo() modifica la estructura v:
+
 //     fn foo(v: *Vertex) void {
 //         v.x += 2;
 //         v.y += 3;
 //         v.z += 7;
 //     }
-//
-// And call them like so:
-//
+
+// Y llamarlas de la siguiente manera:
+
 //     foo(&v1);
-//
-// Let's revisit our RPG example and make a printCharacter() function
-// that takes a Character by reference and prints it...*and*
-// prints a linked "mentor" Character, if there is one.
-//
+
+// Revisemos nuestro ejemplo de RPG y hagamos una función printCharacter() que tome un Character por referencia y lo imprima... *y* imprima un Character "mentor" vinculado, si lo hay.
+
 const std = @import("std");
 
 const Class = enum {
@@ -68,7 +62,7 @@ pub fn main() void {
 
     // FIX ME!
     // Please pass Glorp to printCharacter():
-    printCharacter(???);
+    printCharacter(&glorp);
 }
 
 // Note how this function's "c" parameter is a pointer to a Character struct.

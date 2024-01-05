@@ -1,8 +1,7 @@
 //
-// With tagged unions, it gets EVEN BETTER! If you don't have a
-// need for a separate enum, you can define an inferred enum with
-// your union all in one place. Just use the 'enum' keyword in
-// place of the tag type:
+// ¡Con las uniones etiquetadas, se vuelve AÚN MEJOR! Si no necesitas un
+// enum separado, puedes definir un enum inferido con tu unión en un solo lugar.
+// Simplemente usa la palabra clave 'enum' en lugar del tipo de etiqueta:
 //
 //     const Foo = union(enum) {
 //         small: u8,
@@ -10,12 +9,12 @@
 //         large: u64,
 //     };
 //
-// Let's convert Insect. Doctor Zoraptera has already deleted the
-// explicit InsectStat enum for you!
+// Vamos a convertir Insecto. ¡El Doctor Zoraptera ya ha eliminado
+// el enum explícito InsectStat por ti!
 //
 const std = @import("std");
 
-const Insect = union(InsectStat) {
+const Insect = union(enum) {
     flowers_visited: u16,
     still_alive: bool,
 };
@@ -39,16 +38,16 @@ fn printInsect(insect: Insect) void {
     }
 }
 
-// Inferred enums are neat, representing the tip of the iceberg
-// in the relationship between enums and unions. You can actually
-// coerce a union TO an enum (which gives you the active field
-// from the union as an enum). What's even wilder is that you can
-// coerce an enum to a union! But don't get too excited, that
-// only works when the union type is one of those weird zero-bit
-// types like void!
+// Los enums inferidos son geniales, representando la punta del iceberg
+// en la relación entre los enums y las uniones. En realidad, puedes
+// forzar una unión A un enum (lo que te da el campo activo
+// de la unión como un enum). ¡Lo que es aún más sorprendente es que puedes
+// forzar un enum a una unión! Pero no te emociones demasiado, eso
+// solo funciona cuando el tipo de unión es uno de esos tipos extraños de cero bits
+// como void!
 //
-// Tagged unions, as with most ideas in computer science, have a
-// long history going back to the 1960s. However, they're only
-// recently becoming mainstream, particularly in system-level
-// programming languages. You might have also seen them called
-// "variants", "sum types", or even "enums"!
+// Las uniones etiquetadas, al igual que la mayoría de las ideas en ciencias de la computación,
+// tienen una larga historia que se remonta a la década de 1960. Sin embargo, solo
+// recientemente se están volviendo populares, especialmente en lenguajes de programación
+// a nivel de sistema. Es posible que también las hayas visto llamadas
+// "variantes", "tipos suma" o incluso "enums"!

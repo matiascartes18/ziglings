@@ -1,37 +1,29 @@
 //
-// Enums are really just a set of numbers. You can leave the
-// numbering up to the compiler, or you can assign them
-// explicitly. You can even specify the numeric type used.
+// Los enums son simplemente un conjunto de números. Puedes dejar que el compilador se encargue de asignarles números, o puedes asignarlos explícitamente. Incluso puedes especificar el tipo numérico utilizado.
 //
 //     const Stuff = enum(u8){ foo = 16 };
 //
-// You can get the integer out with a builtin function,
-// @intFromEnum(). We'll learn about builtins properly in a later
-// exercise.
+// Puedes obtener el entero con una función incorporada, @intFromEnum(). Aprenderemos sobre las funciones incorporadas correctamente en un ejercicio posterior.
 //
 //     const my_stuff: u8 = @intFromEnum(Stuff.foo);
 //
-// Note how that built-in function starts with "@" just like the
-// @import() function we've been using.
+// Observa cómo esa función incorporada comienza con "@" al igual que la función @import() que hemos estado utilizando.
 //
 const std = @import("std");
 
-// Zig lets us write integers in hexadecimal format:
+// Zig nos permite escribir enteros en formato hexadecimal:
 //
-//     0xf (is the value 15 in hex)
+//     0xf (es el valor 15 en hexadecimal)
 //
-// Web browsers let us specify colors using a hexadecimal
-// number where each byte represents the brightness of the
-// Red, Green, or Blue component (RGB) where two hex digits
-// are one byte with a value range of 0-255:
+// Los navegadores web nos permiten especificar colores usando un número hexadecimal donde cada byte representa el brillo de los componentes Rojo, Verde o Azul (RGB), donde dos dígitos hexadecimales son un byte con un rango de valores de 0 a 255:
 //
 //     #RRGGBB
 //
-// Please define and use a pure blue value Color:
+// Por favor, define y utiliza un valor de color azul puro:
 const Color = enum(u32) {
     red = 0xff0000,
     green = 0x00ff00,
-    blue = ???,
+    blue = 0x0000ff,
 };
 
 pub fn main() void {
@@ -53,12 +45,12 @@ pub fn main() void {
         \\<p>
         \\  <span style="color: #{x:0>6}">Red</span>
         \\  <span style="color: #{x:0>6}">Green</span>
-        \\  <span style="color: #{}">Blue</span>
+        \\  <span style="color: #{x:0>6}">Blue</span>
         \\</p>
         \\
     , .{
         @intFromEnum(Color.red),
         @intFromEnum(Color.green),
-        @intFromEnum(???), // Oops! We're missing something!
+        @intFromEnum(Color.blue), // Oops! We're missing something!
     });
 }
