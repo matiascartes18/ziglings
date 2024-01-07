@@ -1,36 +1,36 @@
 //
-// The 'for' loop is not just limited to looping over one or two
-// items. Let's try an example with a whole bunch!
+// El bucle 'for' no se limita solo a iterar sobre uno o dos
+// elementos. ¡Probemos un ejemplo con un montón!
 //
-// But first, there's one last thing we've avoided mentioning
-// until now: The special range that leaves off the last value:
+// Pero primero, hay una última cosa que hemos evitado mencionar
+// hasta ahora: El rango especial que omite el último valor:
 //
-//     for ( things, 0.. ) |t, i| { ... }
+//     for ( cosas, 0.. ) |c, i| { ... }
 //
-// That's how we tell Zig that we want to get a numeric value for
-// every item in "things", starting with 0.
+// Así es como le decimos a Zig que queremos obtener un valor numérico para
+// cada elemento en "cosas", comenzando con 0.
 //
-// A nice feature of these index ranges is that you can have them
-// start with any number you choose. The first value of "i" in
-// this example will be 500, then 501, 502, etc.:
+// Una característica agradable de estos rangos de índice es que puedes hacer que comiencen
+// con cualquier número que elijas. El primer valor de "i" en
+// este ejemplo será 500, luego 501, 502, etc.:
 //
-//     for ( things, 500.. ) |t, i| { ... }
+//     for ( cosas, 500.. ) |c, i| { ... }
 //
-// Remember our RPG characters? They had the following
-// properties, which we stored in a struct type:
+// ¿Recuerdas nuestros personajes de RPG? Tenían las siguientes
+// propiedades, que almacenamos en un tipo de estructura:
 //
-//     class
-//     gold
-//     experience
+//     clase
+//     oro
+//     experiencia
 //
-// What we're going to do now is store the same RPG character
-// data, but in a separate array for each property.
+// Lo que vamos a hacer ahora es almacenar los mismos datos de personajes de RPG,
+// pero en un array separado para cada propiedad.
 //
-// It might look a little awkward, but let's bear with it.
+// Puede parecer un poco incómodo, pero aguantemos.
 //
-// We've started writing a program to print a numbered list of
-// characters with each of their properties, but it needs a
-// little help:
+// Hemos comenzado a escribir un programa para imprimir una lista numerada de
+// personajes con cada una de sus propiedades, pero necesita un
+// poco de ayuda:
 //
 const std = @import("std");
 const print = std.debug.print;
@@ -51,7 +51,7 @@ pub fn main() void {
 
     // We would like to number our list starting with 1, not 0.
     // How do we do that?
-    for (roles, gold, experience, ???) |c, g, e, i| {
+    for (roles, gold, experience, 1..) |c, g, e, i| {
         const role_name = switch (c) {
             .wizard => "Wizard",
             .thief => "Thief",
@@ -68,59 +68,55 @@ pub fn main() void {
     }
 }
 //
-// By the way, storing our character data in arrays like this
-// isn't *just* a silly way to demonstrate multi-object 'for'
-// loops.
+// Por cierto, almacenar nuestros datos de personajes en arrays de esta manera
+// no es *solo* una forma tonta de demostrar los bucles 'for' con múltiples
+// objetos.
 //
-// It's *also* a silly way to introduce a concept called
-// "data-oriented design".
+// Es *también* una forma tonta de introducir un concepto llamado
+// "diseño orientado a datos".
 //
-// Let's use a metaphor to build up an intuition for what this is
-// all about:
+// Usemos una metáfora para desarrollar una intuición de qué se trata todo esto:
 //
-// Let's say you've been tasked with grabbing three glass
-// marbles, three spoons, and three feathers from a magic bag.
-// But you can't use your hands to grab them. Instead, you must
-// use a marble scoop, spoon magnet, and feather tongs to grab
-// each type of object.
+// Digamos que te han encargado agarrar tres canicas de vidrio, tres cucharas y tres plumas de una bolsa mágica.
+// Pero no puedes usar tus manos para agarrarlos. En cambio, debes
+// usar una cuchara para canicas, un imán para cucharas y unas pinzas para plumas para agarrar
+// cada tipo de objeto.
 //
-// Now, would you rather use the magic bag:
+// Ahora, ¿preferirías usar la bolsa mágica que:
 //
-// A. Grouped the items in clusters so you have to pick up one
-//    marble, then one spoon, then one feather?
+// A. Agrupa los elementos en racimos, por lo que tienes que recoger una
+//    canica, luego una cuchara, luego una pluma?
 //
-//    OR
+//    O
 //
-// B. Grouped the items by type so you can pick up all of the
-//    marbles at once, then all the spoons, then all of the
-//    feathers?
+// B. Agrupa los elementos por tipo, por lo que puedes recoger todas las
+//    canicas a la vez, luego todas las cucharas, luego todas las
+//    plumas?
 //
-// If this metaphor is working, hopefully, it's clear that the 'B'
-// option would be much more efficient.
+// Si esta metáfora está funcionando, esperamos que esté claro que la opción 'B'
+// sería mucho más eficiente.
 //
-// Well, it probably comes as little surprise that storing and
-// using data in a sequential and uniform fashion is also more
-// efficient for modern CPUs.
+// Bueno, probablemente no sorprenda que almacenar y
+// usar datos de manera secuencial y uniforme también es más
+// eficiente para las CPUs modernas.
 //
-// Decades of OOP practices have steered people towards grouping
-// different data types together into mixed-type "objects" with
-// the intent that these are easier on the human mind.
-// Data-oriented design groups data by type in a way that is
-// easier on the computer.
+// Décadas de prácticas de OOP han orientado a las personas hacia la agrupación
+// de diferentes tipos de datos juntos en "objetos" de tipo mixto con
+// la intención de que estos sean más fáciles para la mente humana.
+// El diseño orientado a datos agrupa datos por tipo de una manera que es
+// más fácil para la computadora.
 //
-// With clever language design, maybe we can have both.
+// Con un diseño de lenguaje inteligente, tal vez podamos tener ambos.
 //
-// In the Zig community, you may see the difference in groupings
-// presented with the terms "Array of Structs" (AoS) versus
-// "Struct of Arrays" (SoA).
+// En la comunidad de Zig, puedes ver la diferencia en agrupaciones
+// presentada con los términos "Array de Structs" (AoS) versus
+// "Struct de Arrays" (SoA).
 //
-// To envision these two designs in action, imagine an array of
-// RPG character structs, each containing three different data
-// types (AoS) versus a single RPG character struct containing
-// three arrays of one data type each, like those in the exercise
-// above (SoA).
+// Para visualizar estos dos diseños en acción, imagina un array de
+// structs de personajes de RPG, cada uno conteniendo tres tipos de datos diferentes (AoS) versus un solo struct de personaje de RPG que contiene
+// tres arrays de un solo tipo de datos cada uno, como los del ejercicio
+// anterior (SoA).
 //
-// For a more practical application of "data-oriented design"
-// watch the following talk from Andrew Kelley, the creator of Zig:
-// https://vimeo.com/649009599
-//
+// Para una aplicación más práctica del "diseño orientado a datos"
+// mira la siguiente charla de Andrew Kelley, el creador de Zig:
+// https://vimeo.com/649009599//

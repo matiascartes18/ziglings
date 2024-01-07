@@ -1,52 +1,49 @@
 //
-// The Zig language is in rapid development and continuously
-// improves the language constructs. Ziglings evolves with it.
+// El lenguaje Zig está en rápido desarrollo y mejora continuamente
+// los constructos del lenguaje. Ziglings evoluciona con él.
 //
-// Until version 0.11, Zig's 'for' loops did not directly
-// replicate the functionality of the C-style: "for(a;b;c)"
-// which are so well suited for iterating over a numeric
-// sequence.
+// Hasta la versión 0.11, los bucles 'for' de Zig no replicaban directamente
+// la funcionalidad del estilo C: "for(a;b;c)"
+// que son tan adecuados para iterar sobre una secuencia numérica.
 //
-// Instead, 'while' loops with counters clumsily stood in their
-// place:
+// En su lugar, los bucles 'while' con contadores se usaban de manera torpe:
 //
 //     var i: usize = 0;
 //     while (i < 10) : (i += 1) {
-//         // Here variable 'i' will have each value 0 to 9.
+//         // Aquí la variable 'i' tendrá cada valor de 0 a 9.
 //     }
 //
-// But here we are in the glorious future and Zig's 'for' loops
-// can now take this form:
+// Pero aquí estamos en el glorioso futuro y los bucles 'for' de Zig
+// ahora pueden tomar esta forma:
 //
 //     for (0..10) |i| {
-//         // Here variable 'i' will have each value 0 to 9.
+//         // Aquí la variable 'i' tendrá cada valor de 0 a 9.
 //     }
 //
-// The key to understanding this example is to know that '0..9'
-// uses the new range syntax:
+// La clave para entender este ejemplo es saber que '0..9'
+// utiliza la nueva sintaxis de rango:
 //
-//     0..10 is a range from 0 to 9
-//     1..4  is a range from 1 to 3
+//     0..10 es un rango de 0 a 9
+//     1..4  es un rango de 1 a 3
 //
-// At the moment, ranges are only supported in 'for' loops.
+// Por el momento, los rangos solo son compatibles con los bucles 'for'.
 //
-// Perhaps you recall Exercise 13? We were printing a numeric
-// sequence like so:
+// ¿Quizás recuerdas el Ejercicio 13? Estábamos imprimiendo una secuencia numérica así:
 //
 //     var n: u32 = 1;
 //
-//     // I want to print every number between 1 and 20 that is NOT
-//     // divisible by 3 or 5.
+//     // Quiero imprimir cada número entre 1 y 20 que NO sea
+//     // divisible por 3 o 5.
 //     while (n <= 20) : (n += 1) {
-//         // The '%' symbol is the "modulo" operator and it
-//         // returns the remainder after division.
+//         // El símbolo '%' es el operador "módulo" y devuelve
+//         // el resto después de la división.
 //         if (n % 3 == 0) continue;
 //         if (n % 5 == 0) continue;
 //         std.debug.print("{} ", .{n});
 //     }
 //
-//  Let's try out the new form of 'for' to re-implement that
-//  exercise:
+//  Probemos la nueva forma de 'for' para reimplementar ese
+//  ejercicio:
 //
 const std = @import("std");
 
@@ -54,7 +51,8 @@ pub fn main() void {
 
     // I want to print every number between 1 and 20 that is NOT
     // divisible by 3 or 5.
-    for (???) |n| {
+    const l = 21;
+    for (1..l) |n| {
 
         // The '%' symbol is the "modulo" operator and it
         // returns the remainder after division.
@@ -66,8 +64,8 @@ pub fn main() void {
     std.debug.print("\n", .{});
 }
 //
-// That's a bit nicer, right?
+// Eso es un poco más agradable, ¿verdad?
 //
-// Of course, both 'while' and 'for' have different advantages.
-// Exercises 11, 12, and 14 would NOT be simplified by switching
-// a 'while' for a 'for'.
+// Por supuesto, tanto 'while' como 'for' tienen diferentes ventajas.
+// Los ejercicios 11, 12 y 14 NO se simplificarían al cambiar
+// un 'while' por un 'for'.

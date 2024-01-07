@@ -1,25 +1,23 @@
 //
-// Often, C functions are used where no equivalent Zig function exists
-// yet. Since the integration of a C function is very simple, as already
-// seen in the last exercise, it naturally offers itself to use the
-// very large variety of C functions for our own programs.
-// As an example:
+// A menudo, se utilizan funciones C donde aún no existe una función Zig equivalente.
+// Dado que la integración de una función C es muy simple, como ya se vio en el último ejercicio,
+// naturalmente se ofrece a sí misma para usar la muy amplia variedad de funciones C para nuestros propios programas.
+// Como un ejemplo:
 //
-// Let's say we have a given angle of 765.2 degrees. If we want to
-// normalize that, it means that we have to subtract X * 360 degrees
-// to get the correct angle. How could we do that? A good method is
-// to use the modulo function. But if we write "765.2 % 360", it won't
-// work, because the standard modulo function works only with integer
-// values. In the C library "math", there is a function called "fmod";
-// the "f" stands for floating and means that we can solve modulo for
-// real numbers. With this function, it should be possible to normalize
-// our angle. Let's go.
+// Digamos que tenemos un ángulo dado de 765.2 grados. Si queremos
+// normalizar eso, significa que tenemos que restar X * 360 grados
+// para obtener el ángulo correcto. ¿Cómo podríamos hacer eso? Un buen método es
+// usar la función módulo. Pero si escribimos "765.2 % 360", no funcionará,
+// porque la función módulo estándar solo funciona con valores enteros. En la biblioteca C "math",
+// hay una función llamada "fmod"; la "f" significa flotante y significa que podemos resolver módulo para
+// números reales. Con esta función, debería ser posible normalizar
+// nuestro ángulo. Vamos a ello.
 
 const std = @import("std");
 
 const c = @cImport({
     // What do we need here?
-    ???
+    @cInclude("math.h");
 });
 
 pub fn main() !void {

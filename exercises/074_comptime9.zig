@@ -1,45 +1,44 @@
 //
-// In addition to knowing when to use the 'comptime' keyword,
-// it's also good to know when you DON'T need it.
+// Además de saber cuándo usar la palabra clave 'comptime',
+// también es bueno saber cuándo NO necesitas usarla.
 //
-// The following contexts are already IMPLICITLY evaluated at
-// compile time, and adding the 'comptime' keyword would be
-// superfluous, redundant, and smelly:
+// Los siguientes contextos ya se evalúan IMPLÍCITAMENTE en
+// tiempo de compilación, y agregar la palabra clave 'comptime' sería
+// superfluo, redundante y maloliente:
 //
-//    * The container-level scope (outside of any function in a source file)
-//    * Type declarations of:
+//    * El ámbito a nivel de contenedor (fuera de cualquier función en un archivo fuente)
+//    * Declaraciones de tipo de:
 //        * Variables
-//        * Functions (types of parameters and return values)
-//        * Structs
-//        * Unions
-//        * Enums
-//    * The test expressions in inline for and while loops
-//    * An expression passed to the @cImport() builtin
+//        * Funciones (tipos de parámetros y valores de retorno)
+//        * Estructuras
+//        * Uniones
+//        * Enumeraciones
+//    * Las expresiones de prueba en bucles for y while en línea
+//    * Una expresión pasada a la función incorporada @cImport()
 //
-// Work with Zig for a while, and you'll start to develop an
-// intuition for these contexts. Let's work on that now.
+// Trabaja con Zig por un tiempo, y empezarás a desarrollar una
+// intuición para estos contextos. Trabajemos en eso ahora.
 //
-// You have been given just one 'comptime' statement to use in
-// the program below. Here it is:
+// Se te ha dado solo una declaración 'comptime' para usar en
+// el programa a continuación. Aquí está:
 //
 //     comptime
 //
-// Just one is all it takes. Use it wisely!
+// Solo una es todo lo que necesitas. ¡Úsala sabiamente!
 //
 const print = @import("std").debug.print;
 
-// Being in the container-level scope, everything about this value is
-// implicitly required to be known compile time.
+// Al estar en el ámbito a nivel de contenedor, todo acerca de este valor se
+// requiere implícitamente que se conozca en tiempo de compilación.
 const llama_count = 5;
 
-// Again, this value's type and size must be known at compile
-// time, but we're letting the compiler infer both from the
-// return type of a function.
+// Nuevamente, el tipo y tamaño de este valor deben ser conocidos en tiempo de
+// compilación, pero estamos dejando que el compilador infiera ambos a partir del tipo de retorno de una función.
 const llamas = makeLlamas(llama_count);
 
 // And here's the function. Note that the return value type
 // depends on one of the input arguments!
-fn makeLlamas(count: usize) [count]u8 {
+fn makeLlamas(comptime count: usize) [count]u8 {
     var temp: [count]u8 = undefined;
     var i = 0;
 
@@ -55,8 +54,7 @@ pub fn main() void {
     print("My llama value is {}.\n", .{llamas[2]});
 }
 //
-// The lesson here is to not pepper your program with 'comptime'
-// keywords unless you need them. Between the implicit compile
-// time contexts and Zig's aggressive evaluation of any
-// expression it can figure out at compile time, it's sometimes
-// surprising how few places actually need the keyword.
+// La lección aquí es no llenar tu programa con palabras clave 'comptime'
+// a menos que las necesites. Entre los contextos implícitos de tiempo de compilación
+// y la evaluación agresiva de Zig de cualquier expresión que pueda resolver en tiempo de compilación,
+// a veces es sorprendente cuántos lugares realmente necesitan la palabra clave.

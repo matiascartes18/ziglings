@@ -23,9 +23,9 @@ var d = Place{ .name = "Dogwood Grove" };
 var e = Place{ .name = "East Pond" };
 var f = Place{ .name = "Fox Pond" };
 
-// Remember how we didn't have to declare the numeric type of the
-// place_count because it is only used at compile time? That
-// probably makes a lot more sense now. :-)
+// ¿Recuerdas cómo no tuvimos que declarar el tipo numérico del
+// place_count porque solo se usa en tiempo de compilación? Eso
+// probablemente tiene mucho más sentido ahora. :-)
 const place_count = 6;
 
 const Path = struct {
@@ -34,22 +34,26 @@ const Path = struct {
     dist: u8,
 };
 
-// Okay, so as you may recall, we had to create each Path struct
-// by hand and each one took 5 lines of code to define:
+// Bien, como recordarás, tuvimos que crear cada estructura Path
+// manualmente y cada una tomó 5 líneas de código para definir:
 //
 //    Path{
-//        .from = &a, // from: Archer's Point
-//        .to = &b,   //   to: Bridge
+//        .from = &a, // desde: Archer's Point
+//        .to = &b,   //   hasta: Bridge
 //        .dist = 2,
 //    },
 //
-// Well, armed with the knowledge that we can run code at compile
-// time, we can perhaps shorten this a bit with a simple function
-// instead.
+// Bueno, armados con el conocimiento de que podemos ejecutar código en tiempo de
+// compilación, quizás podamos acortar esto un poco con una simple función
+// en su lugar.
 //
-// Please fill in the body of this function!
+// ¡Por favor, completa el cuerpo de esta función!
 fn makePath(from: *Place, to: *Place, dist: u8) Path {
-
+    return .{
+        .from = from,
+        .to = to,
+        .dist = dist,
+    };
 }
 
 // Using our new function, these path definitions take up considerably less
@@ -61,21 +65,21 @@ const d_paths = [_]Path{ makePath(&d, &b, 1), makePath(&d, &c, 3), makePath(&d, 
 const e_paths = [_]Path{ makePath(&e, &c, 2), makePath(&e, &f, 1) };
 const f_paths = [_]Path{makePath(&f, &d, 7)};
 //
-// But is it more readable? That could be argued either way.
+// Pero, ¿es más legible? Eso podría ser discutido de ambas maneras.
 //
-// We've seen that it is possible to parse strings at compile
-// time, so the sky's really the limit on how fancy we could get
-// with this.
+// Hemos visto que es posible analizar cadenas en tiempo de compilación,
+// por lo que realmente no hay límites en cuán sofisticados podríamos ser
+// con esto.
 //
-// For example, we could create our own "path language" and
-// create Paths from that. Something like this, perhaps:
+// Por ejemplo, podríamos crear nuestro propio "lenguaje de rutas" y
+// crear Rutas a partir de eso. Algo así, tal vez:
 //
 //    a -> (b[2])
 //    b -> (a[2] d[1])
 //    c -> (d[3] e[2])
 //    ...
 //
-// Feel free to implement something like that as a SUPER BONUS EXERCISE!
+// ¡Siéntete libre de implementar algo así como un EJERCICIO SÚPER BONUS!
 
 const TripItem = union(enum) {
     place: *const Place,
@@ -154,7 +158,7 @@ pub fn main() void {
     const start = &a; // Archer's Point
     const destination = &f; // Fox Pond
 
-    // We could either have this:
+    // Podríamos tener esto:
     //
     //   a.paths = a_paths[0..];
     //   b.paths = b_paths[0..];
@@ -163,7 +167,7 @@ pub fn main() void {
     //   e.paths = e_paths[0..];
     //   f.paths = f_paths[0..];
     //
-    // or this comptime wizardry:
+    // o esta magia de tiempo de compilación:
     //
     const letters = [_][]const u8{ "a", "b", "c", "d", "e", "f" };
     inline for (letters) |letter| {

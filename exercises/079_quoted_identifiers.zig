@@ -1,30 +1,30 @@
 //
-// Sometimes you need to create an identifier that will not, for
-// whatever reason, play by the naming rules:
+// A veces necesitas crear un identificador que, por la razón que sea,
+// no cumple con las reglas de nomenclatura:
 //
-//     const 55_cows: i32 = 55; // ILLEGAL: starts with a number
-//     const isn't true: bool = false; // ILLEGAL: what even?!
+//     const 55_cows: i32 = 55; // ILEGAL: comienza con un número
+//     const isn't true: bool = false; // ILEGAL: ¿qué es esto?!
 //
-// If you try to create either of these under normal
-// circumstances, a special Program Identifier Syntax Security
-// Team (PISST) will come to your house and take you away.
+// Si intentas crear cualquiera de estos en circunstancias normales,
+// un equipo especial de seguridad de sintaxis de identificadores de programas
+// (PISST, por sus siglas en inglés) vendrá a tu casa y te llevará.
 //
-// Thankfully, Zig has a way to sneak these wacky identifiers
-// past the authorities: the @"" identifier quoting syntax.
+// Afortunadamente, Zig tiene una forma de pasar estos identificadores locos
+// a las autoridades: la sintaxis de citación de identificadores @"".
 //
 //     @"foo"
 //
-// Please help us safely smuggle these fugitive identifiers into
-// our program:
+// Por favor, ayúdanos a introducir de manera segura estos identificadores fugitivos en
+// nuestro programa:
 //
 const print = @import("std").debug.print;
 
 pub fn main() void {
-    const 55_cows: i32 = 55;
-    const isn't true: bool = false;
+    const @"55_cows": i32 = 55;
+    const @"isn't true": bool = false;
 
     print("Sweet freedom: {}, {}.\n", .{
-        55_cows,
-        isn't true,
+        @"55_cows",
+        @"isn't true",
     });
 }

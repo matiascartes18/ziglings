@@ -3,36 +3,36 @@
 //  TOP SECRET  TOP SECRET  TOP SECRET  TOP SECRET  TOP SECRET
 // ------------------------------------------------------------
 //
-// Are you ready for the THE TRUTH about Zig string literals?
+// ¿Estás listo para LA VERDAD sobre los literales de cadena en Zig?
 //
-// Here it is:
+// Aquí está:
 //
 //     @TypeOf("foo") == *const [3:0]u8
 //
-// Which means a string literal is a "constant pointer to a
-// zero-terminated (null-terminated) fixed-size array of u8".
+// Lo que significa que un literal de cadena es un "puntero constante a un
+// array de tamaño fijo terminado en cero (null-terminated) de u8".
 //
-// Now you know. You've earned it. Welcome to the secret club!
+// Ahora lo sabes. Te lo has ganado. ¡Bienvenido al club secreto!
 //
 // ------------------------------------------------------------
 //
-// Why do we bother using a zero/null sentinel to terminate
-// strings in Zig when we already have a known length?
+// ¿Por qué nos molestamos en usar un centinela cero/null para terminar
+// las cadenas en Zig cuando ya tenemos una longitud conocida?
 //
-// Versatility! Zig strings are compatible with C strings (which
-// are null-terminated) AND can be coerced to a variety of other
-// Zig types:
+// ¡Versatilidad! Las cadenas de Zig son compatibles con las cadenas de C (que
+// terminan en null) Y pueden ser convertidas a una variedad de otros
+// tipos de Zig:
 //
 //     const a: [5]u8 = "array".*;
-//     const b: *const [16]u8 = "pointer to array";
+//     const b: *const [16]u8 = "puntero a array";
 //     const c: []const u8 = "slice";
-//     const d: [:0]const u8 = "slice with sentinel";
-//     const e: [*:0]const u8 = "many-item pointer with sentinel";
-//     const f: [*]const u8 = "many-item pointer";
+//     const d: [:0]const u8 = "slice con centinela";
+//     const e: [*:0]const u8 = "puntero de muchos elementos con centinela";
+//     const f: [*]const u8 = "puntero de muchos elementos";
 //
-// All but 'f' may be printed. (A many-item pointer without a
-// sentinel is not safe to print because we don't know where it
-// ends!)
+// Todos excepto 'f' pueden ser impresos. (Un puntero de muchos elementos sin un
+// centinela no es seguro para imprimir porque no sabemos dónde
+// termina!)
 //
 const print = @import("std").debug.print;
 
@@ -42,25 +42,25 @@ const WeirdContainer = struct {
 };
 
 pub fn main() void {
-    // WeirdContainer is an awkward way to house a string.
+    // WeirdContainer es una forma incómoda de alojar una cadena.
     //
-    // Being a many-item pointer (with no sentinel termination),
-    // the 'data' field "loses" the length information AND the
-    // sentinel termination of the string literal "Weird Data!".
+    // Al ser un puntero de muchos elementos (sin terminación de centinela),
+    // el campo 'data' "pierde" la información de longitud Y la
+    // terminación de centinela del literal de cadena "Weird Data!".
     //
-    // Luckily, the 'length' field makes it possible to still
-    // work with this value.
+    // Afortunadamente, el campo 'length' hace posible seguir
+    // trabajando con este valor.
     const foo = WeirdContainer{
         .data = "Weird Data!",
         .length = 11,
     };
 
-    // How do we get a printable value from 'foo'? One way is to
-    // turn it into something with a known length. We do have a
-    // length... You've actually solved this problem before!
+    // ¿Cómo obtenemos un valor imprimible de 'foo'? Una forma es
+    // convertirlo en algo con una longitud conocida. Tenemos una
+    // longitud... ¡De hecho, ya has resuelto este problema antes!
     //
-    // Here's a big hint: do you remember how to take a slice?
-    const printable = ???;
+    // Aquí tienes una gran pista: ¿recuerdas cómo tomar un slice?
+    const printable = foo.data[0..11];
 
     print("{s}\n", .{printable});
 }

@@ -1,42 +1,42 @@
 //
-// A sentinel value indicates the end of data. Let's imagine a
-// sequence of lowercase letters where uppercase 'S' is the
-// sentinel, indicating the end of the sequence:
+// Un valor centinela indica el final de los datos. Imaginemos una
+// secuencia de letras minúsculas donde la 'S' mayúscula es el
+// centinela, indicando el final de la secuencia:
 //
 //     abcdefS
 //
-// If our sequence also allows for uppercase letters, 'S' would
-// make a terrible sentinel since it could no longer be a regular
-// value in the sequence:
+// Si nuestra secuencia también permite letras mayúsculas, 'S' sería
+// un terrible centinela ya que ya no podría ser un valor regular
+// en la secuencia:
 //
 //     abcdQRST
-//          ^-- Oops! The last letter in the sequence is R!
+//          ^-- ¡Vaya! ¡La última letra de la secuencia es R!
 //
-// A popular choice for indicating the end of a string is the
-// value 0. ASCII and Unicode call this the "Null Character".
+// Una elección popular para indicar el final de una cadena es el
+// valor 0. ASCII y Unicode llaman a esto el "Carácter Nulo".
 //
-// Zig supports sentinel-terminated arrays, slices, and pointers:
+// Zig admite arrays, slices y punteros terminados en centinela:
 //
 //     const a: [4:0]u32       =  [4:0]u32{1, 2, 3, 4};
 //     const b: [:0]const u32  = &[4:0]u32{1, 2, 3, 4};
 //     const c: [*:0]const u32 = &[4:0]u32{1, 2, 3, 4};
 //
-// Array 'a' stores 5 u32 values, the last of which is 0.
-// However the compiler takes care of this housekeeping detail
-// for you. You can treat 'a' as a normal array with just 4
-// items.
+// El array 'a' almacena 5 valores u32, el último de los cuales es 0.
+// Sin embargo, el compilador se encarga de este detalle de mantenimiento
+// por ti. Puedes tratar 'a' como un array normal con solo 4
+// elementos.
 //
-// Slice 'b' is only allowed to point to zero-terminated arrays
-// but otherwise works just like a normal slice.
+// El slice 'b' solo puede apuntar a arrays terminados en cero
+// pero por lo demás funciona igual que un slice normal.
 //
-// Pointer 'c' is exactly like the many-item pointers we learned
-// about in exercise 054, but it is guaranteed to end in 0.
-// Because of this guarantee, we can safely find the end of this
-// many-item pointer without knowing its length. (We CAN'T do
-// that with regular many-item pointers!).
+// El puntero 'c' es exactamente como los punteros de muchos elementos que aprendimos
+// en el ejercicio 054, pero está garantizado que termina en 0.
+// Debido a esta garantía, podemos encontrar de manera segura el final de este
+// puntero de muchos elementos sin conocer su longitud. (¡NO podemos hacer
+// eso con punteros regulares de muchos elementos!).
 //
-// Important: the sentinel value must be of the same type as the
-// data being terminated!
+// Importante: el valor centinela debe ser del mismo tipo que los
+// datos que se están terminando!
 //
 const print = @import("std").debug.print;
 const sentinel = @import("std").meta.sentinel;
@@ -52,37 +52,36 @@ pub fn main() void {
     // sentinel value 0. This seems kind of naughty.
     nums[3] = 0;
 
-    // So now we have a zero-terminated array and a many-item
-    // pointer that reference the same data: a sequence of
-    // numbers that both ends in and CONTAINS the sentinel value.
+    // Así que ahora tenemos un array terminado en cero y un puntero de muchos elementos
+    // que hacen referencia a los mismos datos: una secuencia de
+    // números que termina en y CONTIENE el valor centinela.
     //
-    // Attempting to loop through and print both of these should
-    // demonstrate how they are similar and different.
+    // Intentar recorrer e imprimir ambos debería
+    // demostrar cómo son similares y diferentes.
     //
-    // (It turns out that the array prints completely, including
-    // the sentinel 0 in the middle. The many-item pointer stops
-    // at the first sentinel value.)
+    // (Resulta que el array se imprime completamente, incluyendo
+    // el valor centinela 0 en medio. El puntero de muchos elementos se detiene
+    // en el primer valor centinela.)
     printSequence(nums);
     printSequence(ptr);
 
     print("\n", .{});
 }
 
-// Here's our generic sequence printing function. It's nearly
-// complete, but there are a couple of missing bits. Please fix
-// them!
+// Aquí está nuestra función genérica de impresión de secuencias. Está casi
+// completa, pero faltan un par de bits. ¡Por favor, arréglalos!
 fn printSequence(my_seq: anytype) void {
     const my_typeinfo = @typeInfo(@TypeOf(my_seq));
 
-    // The TypeInfo contained in my_type is a union. We use a
-    // switch to handle printing the Array or Pointer fields,
-    // depending on which type of my_seq was passed in:
+    // El TypeInfo contenido en my_type es una unión. Usamos un
+    // switch para manejar la impresión de los campos Array o Pointer,
+    // dependiendo de qué tipo de my_seq se pasó:
     switch (my_typeinfo) {
         .Array => {
             print("Array:", .{});
 
             // Loop through the items in my_seq.
-            for (???) |s| {
+            for (my_seq) |s| {
                 print("{}", .{s});
             }
         },
@@ -94,7 +93,7 @@ fn printSequence(my_seq: anytype) void {
             // Loop through the items in my_seq until we hit the
             // sentinel value.
             var i: usize = 0;
-            while (??? != my_sentinel) {
+            while (my_seq[i] != my_sentinel.?) {
                 print("{}", .{my_seq[i]});
                 i += 1;
             }

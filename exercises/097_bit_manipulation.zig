@@ -1,71 +1,68 @@
 //
-// Bit manipulations is a very powerful tool just also from Zig.
-// Since the dawn of the computer age, numerous algorithms have been
-// developed that solve tasks solely by moving, setting, or logically
-// combining bits.
+// La manipulación de bits es una herramienta muy poderosa también en Zig.
+// Desde el amanecer de la era de la computación, se han desarrollado numerosos algoritmos que
+// resuelven tareas únicamente moviendo, estableciendo o combinando lógicamente bits.
 //
-// Zig also uses direct bit manipulation in its standard library for
-// functions where possible. And it is often possible with calculations
-// based on integers.
+// Zig también utiliza la manipulación directa de bits en su biblioteca estándar para
+// funciones donde es posible. Y a menudo es posible con cálculos
+// basados en enteros.
 //
-// Often it is not easy to understand at first glance what exactly these
-// algorithms do when only "numbers" in memory areas change outwardly.
-// But it must never be forgotten that the numbers only represent the
-// interpretation of the bit sequences.
+// A menudo no es fácil entender a primera vista qué es exactamente lo que estos
+// algoritmos hacen cuando solo cambian "números" en áreas de memoria externas.
+// Pero nunca se debe olvidar que los números solo representan la
+// interpretación de las secuencias de bits.
 //
-// Quasi the reversed case we have otherwise, namely that we represent
-// numbers in bit sequences.
+// Quasi el caso inverso que tenemos de otra manera, es decir, que representamos
+// números en secuencias de bits.
 //
-// We remember: 1 byte = 8 bits = 11111111 = 255 decimal = FF hex.
+// Recordamos: 1 byte = 8 bits = 11111111 = 255 decimal = FF hex.
 //
-// Zig provides all the necessary functions to change the bits inside
-// a variable. It is distinguished whether the bit change leads to an
-// overflow or not.The details are in the Zig documentation in section
-// 10.1 "Table of Operators".
+// Zig proporciona todas las funciones necesarias para cambiar los bits dentro
+// de una variable. Se distingue si el cambio de bit conduce a un
+// desbordamiento o no. Los detalles están en la documentación de Zig en la sección
+// 10.1 "Tabla de Operadores".
 //
-// Here are some examples of how the bits of variables can be changed:
+// Aquí hay algunos ejemplos de cómo se pueden cambiar los bits de las variables:
 //
 //          const numOne: u8 = 15;        //   =  0000 1111
 //          const numTwo: u8 = 245;       //   =  1111 0101
 //
-//          const res1 = numOne >> 4;     //   =  0000 0000 - shift right
-//          const res2 = numOne << 4;     //   =  1111 0000 - shift left
-//          const res3 = numOne & numTwo; //   =  0000 0101 - and
-//          const res4 = numOne | numTwo; //   =  1111 1111 - or
+//          const res1 = numOne >> 4;     //   =  0000 0000 - desplazamiento a la derecha
+//          const res2 = numOne << 4;     //   =  1111 0000 - desplazamiento a la izquierda
+//          const res3 = numOne & numTwo; //   =  0000 0101 - y
+//          const res4 = numOne | numTwo; //   =  1111 1111 - o
 //          const res5 = numOne ^ numTwo; //   =  1111 1010 - xor
 //
 //
-// To familiarize ourselves with bit manipulation, we start with a simple
-// but often underestimated function and then add other exercises in
-// loose order.
+// Para familiarizarnos con la manipulación de bits, comenzamos con una simple
+// pero a menudo subestimada función y luego agregamos otros ejercicios en
+// orden suelto.
 //
-// The following text contains excerpts from Wikipedia.
+// El siguiente texto contiene extractos de Wikipedia.
 //
-// Swap
-// In computer programming, the act of swapping two variables refers to
-// mutually exchanging the values of the variables. Usually, this is
-// done with the data in memory. For example, in a program, two variables
-// may be defined thus (in pseudocode):
+// Intercambio
+// En la programación de computadoras, el acto de intercambiar dos variables se refiere a
+// intercambiar mutuamente los valores de las variables. Por lo general, esto se
+// hace con los datos en memoria. Por ejemplo, en un programa, dos variables
+// pueden ser definidas así (en pseudocódigo):
 //
 //                        data_item x := 1
 //                        data_item y := 0
 //
 //                        swap (x, y);
 //
-// After swap() is performed, x will contain the value 0 and y will
-// contain 1; their values have been exchanged. The simplest and probably
-// most widely used method to swap two variables is to use a third temporary
-// variable:
+// Después de que se realiza swap(), x contendrá el valor 0 y y
+// contendrá 1; sus valores han sido intercambiados. El método más simple y probablemente
+// más utilizado para intercambiar dos variables es usar una tercera variable temporal:
 //
 //                        define swap (x, y)
 //                        temp := x
 //                        x := y
 //                        y := temp
 //
-// However, with integers we can also achieve the swap function simply by
-// bit manipulation. To do this, the variables are mutually linked with xor
-// and the result is the same.
-
+// Sin embargo, con enteros también podemos lograr la función de intercambio simplemente por
+// manipulación de bits. Para hacer esto, las variables se vinculan mutuamente con xor
+// y el resultado es el mismo.
 const std = @import("std");
 const print = std.debug.print;
 
@@ -80,16 +77,17 @@ pub fn main() !void {
     y ^= x;
 
     // What must be written here?
-    ???;
+    x ^= y;
+    y ^= x;
 
     print("x = {d}; y = {d}\n", .{ x, y });
 }
 
-// This variable swap takes advantage of the fact that the value resulting
-// from the xor of two values contains both of these values.
-// This circumstance was (and still is) sometimes used for encryption.
-// Value XOR Key = Crypto. => Crypto XOR Key = Value.
-// Since this can be swapped arbitrarily, you can swap two variables in this way.
+// Esta variable de intercambio aprovecha el hecho de que el valor resultante
+// del xor de dos valores contiene ambos valores.
+// Esta circunstancia fue (y todavía es) a veces utilizada para el cifrado.
+// Valor XOR Clave = Cripto. => Cripto XOR Clave = Valor.
+// Dado que esto se puede intercambiar de manera arbitraria, puedes intercambiar dos variables de esta manera.
 //
-// For Crypto it is better not to use this, but in sorting algorithms like
-// Bubble Sort it works very well.
+// Para Cripto es mejor no usar esto, pero en algoritmos de ordenación como
+// Bubble Sort funciona muy bien.

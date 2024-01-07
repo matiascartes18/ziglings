@@ -1,84 +1,82 @@
 //
-// Terminals have come a long way over the years. Starting with
-// monochrome lines on flickering CRT monitors and continuously
-// improving to today's modern terminal emulators with sharp
-// images, true color, fonts, ligatures, and characters in every
-// known language.
+// Las terminales han recorrido un largo camino a lo largo de los años. Comenzando con
+// líneas monocromáticas en monitores CRT parpadeantes y mejorando continuamente
+// hasta los emuladores de terminal modernos de hoy con imágenes nítidas,
+// colores verdaderos, fuentes, ligaduras y caracteres en todos los
+// idiomas conocidos.
 //
-// Formatting our results to be appealing and allow quick visual
-// comprehension of the information is what users desire. <3
+// Formatear nuestros resultados para que sean atractivos y permitan una rápida comprensión visual
+// de la información es lo que desean los usuarios. <3
 //
-// C set string formatting standards over the years, and Zig is
-// following suit and growing daily. Due to this growth, there is
-// no official documentation for standard library features such
-// as string formatting.
+// C estableció los estándares de formateo de cadenas a lo largo de los años, y Zig está
+// siguiendo su ejemplo y creciendo diariamente. Debido a este crecimiento, no hay
+// documentación oficial para características de la biblioteca estándar como
+// el formateo de cadenas.
 //
-// Therefore, the comments for the format() function are the only
-// way to definitively learn how to format strings in Zig:
+// Por lo tanto, los comentarios para la función format() son la única
+// forma de aprender definitivamente cómo formatear cadenas en Zig:
 //
 //     https://github.com/ziglang/zig/blob/master/lib/std/fmt.zig#L29
 //
-// Zig already has a very nice selection of formatting options.
-// These can be used in different ways, but typically to convert
-// numerical values into various text representations. The
-// results can be used for direct output to a terminal or stored
-// for later use or written to a file. The latter is useful when
-// large amounts of data are to be processed by other programs.
+// Zig ya tiene una muy buena selección de opciones de formateo.
+// Estas se pueden usar de diferentes maneras, pero típicamente para convertir
+// valores numéricos en varias representaciones de texto. Los
+// resultados se pueden usar para una salida directa a una terminal o almacenados
+// para su uso posterior o escritos en un archivo. Este último es útil cuando
+// grandes cantidades de datos deben ser procesados por otros programas.
 //
-// In Ziglings, we are concerned with the output to the console.
-// But since the formatting instructions for files are the same,
-// what you learn applies universally.
+// En Ziglings, nos preocupamos por la salida a la consola.
+// Pero dado que las instrucciones de formateo para archivos son las mismas,
+// lo que aprendes se aplica universalmente.
 //
-// Since we write to "debug" output in Ziglings, our answers
-// usually look something like this:
+// Dado que escribimos en la salida "debug" en Ziglings, nuestras respuestas
+// suelen verse algo así:
 //
-//      print("Text {placeholder} another text \n", .{foo});
+//      print("Texto {placeholder} otro texto \n", .{foo});
 //
-// In addition to being replaced with foo in this example, the
-// {placeholder} in the string can also have formatting applied.
-// How does that work?
+// Además de ser reemplazado con foo en este ejemplo, el
+// {placeholder} en la cadena también puede tener formateo aplicado.
+// ¿Cómo funciona eso?
 //
-// This actually happens in several stages. In one stage, escape
-// sequences are evaluated. The one we've seen the most
-// (including the example above) is "\n" which means "line feed".
-// Whenever this statement is found, a new line is started in the
-// output. Escape sequences can also be written one after the
-// other, e.g. "\n\n" will cause two line feeds.
+// Esto sucede en varias etapas. En una etapa, se evalúan las secuencias de escape.
+// La que hemos visto más (incluyendo el ejemplo anterior) es "\n" que significa "salto de línea".
+// Siempre que se encuentra esta declaración, se inicia una nueva línea en la
+// salida. Las secuencias de escape también se pueden escribir una tras otra, por ejemplo, "\n\n" provocará dos saltos de línea.
 //
-// By the way, the result of these escape sequences are passed
-// directly to the terminal program. Other than translating them
-// into control codes, escape sequences have nothing to do with
-// Zig. Zig knows nothing about "line feeds" or "tabs" or
-// "bells".
+// Por cierto, el resultado de estas secuencias de escape se pasa
+// directamente al programa de terminal. Aparte de traducirlas
+// en códigos de control, las secuencias de escape no tienen nada que ver con
+// Zig. Zig no sabe nada sobre "saltos de línea" o "tabs" o
+// "campanas".
 //
-// The formatting that Zig *does* perform itself is found in the
-// curly brackets: "{placeholder}". Formatting instructions in
-// the placeholder will determine how the corresponding value,
-// e.g. foo, is displayed.
+// El formateo que Zig *sí* realiza por sí mismo se encuentra en los
+// corchetes rizados: "{placeholder}". Las instrucciones de formateo en
+// el marcador de posición determinarán cómo se muestra el valor correspondiente,
+// por ejemplo, foo.
 //
-// And this is where it gets exciting, because format() accepts a
-// variety of formatting instructions. It's basically a tiny
-// language of its own. Here's a numeric example:
+// Y aquí es donde se pone emocionante, porque format() acepta una
+// variedad de instrucciones de formateo. Es básicamente un pequeño
+// lenguaje por sí mismo. Aquí tienes un ejemplo numérico:
 //
-//     print("Catch-{x:0>4}.", .{twenty_two});
+//     print("Catch-{x:0>4}.", .{veintidos});
 //
-// This formatting instruction outputs a hexadecimal number with
-// leading zeros:
+// Esta instrucción de formateo muestra un número hexadecimal con
+// ceros a la izquierda:
 //
 //     Catch-0x0016.
 //
-// Or you can center-align a string like so:
+// O puedes centrar una cadena de esta manera:
 //
-//     print("{s:*^20}\n", .{"Hello!"});
+//     print("{s:*^20}\n", .{"¡Hola!"});
 //
-// Output:
+// Salida:
 //
-//     *******Hello!*******
+//     *******¡Hola!*******
 //
-// Let's try making use of some formatting. We've decided that
-// the one thing missing from our lives is a multiplication table
-// for all numbers from 1-15. We want the table to be nice and
-// neat, with numbers in straight columns like so:
+// Intentemos hacer uso de algún formateo. Hemos decidido que
+// lo único que falta en nuestras vidas es una tabla de multiplicar
+// para todos los números del 1 al 15. Queremos que la tabla sea bonita y
+// ordenada, con números en columnas rectas como así:
 //
 //      X |  1   2   3   4   5  ...
 //     ---+---+---+---+---+---+
@@ -94,9 +92,9 @@
 //
 //      ...
 //
-// Without string formatting, this would be a more challenging
-// assignment because the number of digits in the numbers vary
-// from 1 to 3. But formatting can help us with that.
+// Sin el formateo de cadenas, esto sería una tarea más desafiante
+// porque el número de dígitos en los números varía
+// de 1 a 3. Pero el formateo puede ayudarnos con eso.
 //
 const std = @import("std");
 const print = std.debug.print;
@@ -131,7 +129,7 @@ pub fn main() !void {
         for (0..size) |b| {
             // What formatting is needed here to make our columns
             // nice and straight?
-            print("{???} ", .{(a + 1) * (b + 1)});
+            print("{d:>3} ", .{(a + 1) * (b + 1)});
         }
 
         // After each row we use double line feed:

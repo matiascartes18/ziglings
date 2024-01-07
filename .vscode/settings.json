@@ -4,7 +4,7 @@
     "terminal.integrated.cursorStyle": "line",
     "terminal.integrated.cursorStyleInactive": "block",
     "terminal.integrated.tabs.defaultColor": "terminal.ansiBlack",
-    "editor.guides.bracketPairs": true,
+    "editor.guides.bracketPairs": "active",
     "rust-analyzer.typing.autoClosingAngleBrackets.enable": true,
     "zig.zls.highlightGlobalVarDeclarations": true,
     "zig.zls.inlayHintsHideRedundantParamNames": true,
@@ -16,5 +16,11 @@
     "editor.defaultFormatter": "ziglang.vscode-zig",
     "editor.formatOnPaste": false,
     "editor.formatOnType": false,
-    "zig.formattingProvider": "extension"
+    "zig.formattingProvider": "extension",
+    "workbench.colorCustomizations": {
+        "[Fleet Purple]": {}
+    },
+    "workbench.colorTheme": "Min Dark",
+    "editor.autoClosingBrackets": "beforeWhitespace",
+    "editor.autoClosingQuotes": "beforeWhitespace"
 }

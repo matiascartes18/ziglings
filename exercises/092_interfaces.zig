@@ -1,34 +1,33 @@
 //
-// Remember our ant and bee simulator constructed with unions
-// back in exercises 55 and 56? There, we demonstrated that
-// unions allow us to treat different data types in a uniform
-// manner.
+// ¿Recuerdas nuestro simulador de hormigas y abejas construido con uniones
+// en los ejercicios 55 y 56? Allí, demostramos que
+// las uniones nos permiten tratar diferentes tipos de datos de manera uniforme.
 //
-// One neat feature was using tagged unions to create a single
-// function to print a status for ants *or* bees by switching:
+// Una característica interesante fue el uso de uniones etiquetadas para crear una única
+// función para imprimir un estado para hormigas *o* abejas mediante un switch:
 //
-//   switch (insect) {
-//      .still_alive => ...      // (print ant stuff)
-//      .flowers_visited => ...  // (print bee stuff)
+//   switch (insecto) {
+//      .still_alive => ...      // (imprimir cosas de hormigas)
+//      .flowers_visited => ...  // (imprimir cosas de abejas)
 //   }
 //
-// Well, that simulation was running just fine until a new insect
-// arrived in the virtual garden, a grasshopper!
+// Bueno, esa simulación estaba funcionando bien hasta que un nuevo insecto
+// llegó al jardín virtual, ¡un saltamontes!
 //
-// Doctor Zoraptera started to add grasshopper code to the
-// program, but then she backed away from her keyboard with an
-// angry hissing sound. She had realized that having code for
-// each insect in one place and code to print each insect in
-// another place was going to become unpleasant to maintain when
-// the simulation expanded to hundreds of different insects.
+// La Doctora Zoraptera comenzó a añadir código de saltamontes al
+// programa, pero luego se alejó de su teclado con un
+// sonido de siseo enfadado. Se había dado cuenta de que tener código para
+// cada insecto en un lugar y código para imprimir cada insecto en
+// otro lugar iba a ser desagradable de mantener cuando
+// la simulación se expandiera a cientos de diferentes insectos.
 //
-// Thankfully, Zig has another comptime feature we can use
-// to get out of this dilemma called the 'inline else'.
+// Afortunadamente, Zig tiene otra característica de tiempo de compilación que podemos usar
+// para salir de este dilema llamada 'inline else'.
 //
-// We can replace this redundant code:
+// Podemos reemplazar este código redundante:
 //
-//   switch (thing) {
-//       .a => |a| special(a),
+//   switch (cosa) {
+//       .a => |a| especial(a),
 //       .b => |b| normal(b),
 //       .c => |c| normal(c),
 //       .d => |d| normal(d),
@@ -36,20 +35,20 @@
 //       ...
 //   }
 //
-// With:
+// Con:
 //
-//   switch (thing) {
-//       .a => |a| special(a),
+//   switch (cosa) {
+//       .a => |a| especial(a),
 //       inline else => |t| normal(t),
 //   }
 //
-// We can have special handling of some cases and then Zig
-// handles the rest of the matches for us.
+// Podemos tener un manejo especial de algunos casos y luego Zig
+// maneja el resto de las coincidencias por nosotros.
 //
-// With this feature, you decide to make an Insect union with a
-// single uniform 'print()' function. All of the insects can
-// then be responsible for printing themselves. And Doctor
-// Zoraptera can calm down and stop gnawing on the furniture.
+// Con esta característica, decides hacer una unión Insecto con una
+// única función uniforme 'print()'. Todos los insectos pueden
+// entonces ser responsables de imprimirse a sí mismos. Y la Doctora
+// Zoraptera puede calmarse y dejar de roer los muebles.
 //
 const std = @import("std");
 
@@ -106,7 +105,7 @@ pub fn main() !void {
     for (my_insects) |insect| {
         // Almost done! We want to print() each insect with a
         // single method call here.
-        ???
+        insect.print();
     }
 }
 

@@ -1,128 +1,127 @@
 //
-// The functionality of the standard library is becoming increasingly
-// important in Zig. On the one hand, it is helpful to look at how
-// the individual functions are implemented. Because this is wonderfully
-// suitable as a template for your own functions. On the other hand,
-// these standard functions are part of the basic equipment of Zig.
+// La funcionalidad de la biblioteca estándar se está volviendo cada vez más
+// importante en Zig. Por un lado, es útil observar cómo
+// se implementan las funciones individuales. Porque esto es maravillosamente
+// adecuado como una plantilla para tus propias funciones. Por otro lado,
+// estas funciones estándar son parte del equipamiento básico de Zig.
 //
-// This means that they are always available on every system.
-// Therefore it is worthwhile to deal with them also in Ziglings.
-// It's a great way to learn important skills. For example, it is
-// often necessary to process large amounts of data from files.
-// And for this sequential reading and processing, Zig provides some
-// useful functions, which we will take a closer look at in the coming
-// exercises.
+// Esto significa que siempre están disponibles en cada sistema.
+// Por lo tanto, vale la pena tratar con ellas también en Ziglings.
+// Es una excelente manera de aprender habilidades importantes. Por ejemplo, es
+// a menudo necesario procesar grandes cantidades de datos de archivos.
+// Y para esta lectura y procesamiento secuencial, Zig proporciona algunas
+// funciones útiles, que examinaremos más de cerca en los próximos
+// ejercicios.
 //
-// A nice example of this has been published on the Zig homepage,
-// replacing the somewhat dusty 'Hello world!
+// Un buen ejemplo de esto ha sido publicado en la página de inicio de Zig,
+// reemplazando el algo polvoriento '¡Hola mundo!
 //
-// Nothing against 'Hello world!', but it just doesn't do justice
-// to the elegance of Zig and that's a pity, if someone takes a short,
-// first look at the homepage and doesn't get 'enchanted'. And for that
-// the present example is simply better suited and we will therefore
-// use it as an introduction to tokenizing, because it is wonderfully
-// suited to understand the basic principles.
+// Nada en contra de '¡Hola mundo!', pero simplemente no hace justicia
+// a la elegancia de Zig y eso es una lástima, si alguien echa un vistazo corto,
+// por primera vez en la página de inicio y no se queda 'encantado'. Y para eso
+// el presente ejemplo es simplemente más adecuado y por lo tanto lo utilizaremos
+// como una introducción a la tokenización, porque es maravillosamente
+// adecuado para entender los principios básicos.
 //
-// In the following exercises we will also read and process data from
-// large files and at the latest then it will be clear to everyone how
-// useful all this is.
+// En los siguientes ejercicios también leeremos y procesaremos datos de
+// archivos grandes y a más tardar entonces será claro para todos cuán
+// útil es todo esto.
 //
-// Let's start with the analysis of the example from the Zig homepage
-// and explain the most important things.
+// Comencemos con el análisis del ejemplo de la página de inicio de Zig
+// y expliquemos las cosas más importantes.
 //
 //    const std = @import("std");
 //
-//    // Here a function from the Standard library is defined,
-//    // which transfers numbers from a string into the respective
-//    // integer values.
+//    // Aquí se define una función de la biblioteca estándar,
+//    // que transfiere números de una cadena a los respectivos
+//    // valores enteros.
 //    const parseInt = std.fmt.parseInt;
 //
-//    // Defining a test case
+//    // Definiendo un caso de prueba
 //    test "parse integers" {
 //
-//        // Four numbers are passed in a string.
-//        // Please note that the individual values are separated
-//        // either by a space or a comma.
+//        // Se pasan cuatro números en una cadena.
+//        // Por favor, ten en cuenta que los valores individuales están separados
+//        // ya sea por un espacio o una coma.
 //        const input = "123 67 89,99";
 //
-//        // In order to be able to process the input values,
-//        // memory is required. An allocator is defined here for
-//        // this purpose.
+//        // Para poder procesar los valores de entrada,
+//        // se requiere memoria. Aquí se define un asignador para
+//        // este propósito.
 //        const ally = std.testing.allocator;
 //
-//        // The allocator is used to initialize an array into which
-//        // the numbers are stored.
+//        // El asignador se utiliza para inicializar un array en el que
+//        // se almacenan los números.
 //        var list = std.ArrayList(u32).init(ally);
 //
-//        // This way you can never forget what is urgently needed
-//        // and the compiler doesn't grumble either.
+//        // De esta manera nunca puedes olvidar lo que es urgentemente necesario
+//        // y el compilador tampoco se queja.
 //        defer list.deinit();
 //
-//        // Now it gets exciting:
-//        // A standard tokenizer is called (Zig has several) and
-//        // used to locate the positions of the respective separators
-//        // (we remember, space and comma) and pass them to an iterator.
+//        // Ahora se pone emocionante:
+//        // Se llama a un tokenizador estándar (Zig tiene varios) y
+//        // se utiliza para localizar las posiciones de los respectivos separadores
+//        // (recordamos, espacio y coma) y pasarlos a un iterador.
 //        var it = std.mem.tokenizeAny(u8, input, " ,");
 //
-//        // The iterator can now be processed in a loop and the
-//        // individual numbers can be transferred.
+//        // El iterador ahora puede ser procesado en un bucle y los
+//        // números individuales pueden ser transferidos.
 //        while (it.next()) |num| {
-//            // But be careful: The numbers are still only available
-//            // as strings. This is where the integer parser comes
-//            // into play, converting them into real integer values.
+//            // Pero ten cuidado: Los números todavía sólo están disponibles
+//            // como cadenas. Aquí es donde entra en juego el analizador de enteros,
+//            // convirtiéndolos en valores enteros reales.
 //            const n = try parseInt(u32, num, 10);
 //
-//            // Finally the individual values are stored in the array.
+//            // Finalmente los valores individuales se almacenan en el array.
 //            try list.append(n);
 //        }
 //
-//        // For the subsequent test, a second static array is created,
-//        // which is directly filled with the expected values.
+//        // Para la prueba subsiguiente, se crea un segundo array estático,
+//        // que se llena directamente con los valores esperados.
 //        const expected = [_]u32{ 123, 67, 89, 99 };
 //
-//        // Now the numbers converted from the string can be compared
-//        // with the expected ones, so that the test is completed
-//        // successfully.
+//        // Ahora los números convertidos de la cadena pueden ser comparados
+//        // con los esperados, de modo que la prueba se completa
+//        // con éxito.
 //        for (expected, list.items) |exp, actual| {
 //            try std.testing.expectEqual(exp, actual);
 //        }
 //    }
 //
-// So much for the example from the homepage.
-// Let's summarize the basic steps again:
+// Hasta aquí el ejemplo de la página de inicio.
+// Resumamos de nuevo los pasos básicos:
 //
-// - We have a set of data in sequential order, separated from each other
-//   by means of various characters.
+// - Tenemos un conjunto de datos en orden secuencial, separados entre sí
+//   por medio de varios caracteres.
 //
-// - For further processing, for example in an array, this data must be
-//   read in, separated and, if necessary, converted into the target format.
+// - Para su posterior procesamiento, por ejemplo en un array, estos datos deben ser
+//   leídos, separados y, si es necesario, convertidos al formato objetivo.
 //
-// - We need a buffer that is large enough to hold the data.
+// - Necesitamos un buffer que sea lo suficientemente grande para contener los datos.
 //
-// - This buffer can be created either statically at compile time, if the
-//   amount of data is already known, or dynamically at runtime by using
-//   a memory allocator.
+// - Este buffer puede ser creado ya sea estáticamente en tiempo de compilación, si la
+//   cantidad de datos ya se conoce, o dinámicamente en tiempo de ejecución utilizando
+//   un asignador de memoria.
 //
-// - The data are divided by means of Tokenizer at the respective
-//   separators and stored in the reserved memory. This usually also
-//   includes conversion to the target format.
+// - Los datos se dividen mediante Tokenizer en los respectivos
+//   separadores y se almacenan en la memoria reservada. Esto generalmente también
+//   incluye la conversión al formato objetivo.
 //
-// - Now the data can be conveniently processed further in the correct format.
+// - Ahora los datos pueden ser procesados convenientemente en el formato correcto.
 //
-// These steps are basically always the same.
-// Whether the data is read from a file or entered by the user via the
-// keyboard, for example, is irrelevant. Only subtleties are distinguished
-// and that's why Zig has different tokenizers. But more about this in
-// later exercises.
+// Estos pasos son básicamente siempre los mismos.
+// Ya sea que los datos se lean de un archivo o se introduzcan por el usuario a través del
+// teclado, por ejemplo, es irrelevante. Sólo se distinguen las sutilezas
+// y por eso Zig tiene diferentes tokenizadores. Pero más sobre esto en
+// ejercicios posteriores.
 //
-// Now we also want to write a small program to tokenize some data,
-// after all we need some practice. Suppose we want to count the words
-// of this little poem:
+// Ahora también queremos escribir un pequeño programa para tokenizar algunos datos,
+// después de todo necesitamos algo de práctica. Supongamos que queremos contar las palabras
+// de este pequeño poema:
 //
-// 	My name is Ozymandias, King of Kings;
-// 	Look on my Works, ye Mighty, and despair!
-// 	 by Percy Bysshe Shelley
-//
+// 	Mi nombre es Ozymandias, Rey de Reyes;
+// 	Mira mis Obras, oh Poderoso, y desespera!
+// 	 por Percy Bysshe Shelley//
 //
 const std = @import("std");
 const print = std.debug.print;
@@ -136,7 +135,7 @@ pub fn main() !void {
     ;
 
     // now the tokenizer, but what do we need here?
-    var it = std.mem.tokenizeAny(u8, poem, ???);
+    var it = std.mem.tokenizeAny(u8, poem, " ,;!\n");
 
     // print all words and count them
     var cnt: usize = 0;

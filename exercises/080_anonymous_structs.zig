@@ -1,30 +1,30 @@
 //
-// Struct types are always "anonymous" until we give them a name:
+// Los tipos de estructura son siempre "anónimos" hasta que les damos un nombre:
 //
 //     struct {};
 //
-// So far, we've been giving struct types a name like so:
+// Hasta ahora, hemos estado dando a los tipos de estructura un nombre de esta manera:
 //
 //     const Foo = struct {};
 //
-// * The value of @typeName(Foo) is "<filename>.Foo".
+// * El valor de @typeName(Foo) es "<nombre_del_archivo>.Foo".
 //
-// A struct is also given a name when you return it from a
-// function:
+// A una estructura también se le da un nombre cuando la devuelves desde una
+// función:
 //
 //     fn Bar() type {
 //         return struct {};
 //     }
 //
-//     const MyBar = Bar();  // store the struct type
-//     const bar = Bar() {}; // create instance of the struct
+//     const MyBar = Bar();  // almacenar el tipo de estructura
+//     const bar = Bar() {}; // crear una instancia de la estructura
 //
-// * The value of @typeName(Bar()) is "Bar()".
-// * The value of @typeName(MyBar) is "Bar()".
-// * The value of @typeName(@TypeOf(bar)) is "Bar()".
+// * El valor de @typeName(Bar()) es "Bar()".
+// * El valor de @typeName(MyBar) es "Bar()".
+// * El valor de @typeName(@TypeOf(bar)) es "Bar()".
 //
-// You can also have completely anonymous structs. The value
-// of @typeName(struct {}) is "struct:<position in source>".
+// También puedes tener estructuras completamente anónimas. El valor
+// de @typeName(struct {}) es "struct:<posición en el código fuente>".
 //
 const print = @import("std").debug.print;
 
@@ -48,13 +48,13 @@ pub fn main() void {
     // * circle1 should hold i32 integers
     // * circle2 should hold f32 floats
     //
-    const circle1 = ??? {
+    const circle1 = Circle(i32) {
         .center_x = 25,
         .center_y = 70,
         .radius = 15,
     };
 
-    const circle2 = ??? {
+    const circle2 = Circle(f32) {
         .center_x = 25.234,
         .center_y = 70.999,
         .radius = 15.714,
@@ -75,10 +75,10 @@ pub fn main() void {
     });
 }
 
-// Perhaps you remember the "narcissistic fix" for the type name
-// in Ex. 065? We're going to do the same thing here: use a hard-
-// coded slice to return the type name. That's just so our output
-// looks prettier. Indulge your vanity. Programmers are beautiful.
+// ¿Quizás recuerdas la "solución narcisista" para el nombre del tipo
+// en el Ej. 065? Vamos a hacer lo mismo aquí: usar un slice codificado
+// para devolver el nombre del tipo. Eso es solo para que nuestra salida
+// se vea más bonita. Complace tu vanidad. Los programadores son hermosos.
 fn stripFname(mytype: []const u8) []const u8 {
     return mytype[22..];
 }

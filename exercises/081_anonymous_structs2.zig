@@ -1,6 +1,6 @@
 //
-// An anonymous struct value LITERAL (not to be confused with a
-// struct TYPE) uses '.{}' syntax:
+// Un LITERAL de valor de estructura anónima (no confundir con un
+// TIPO de estructura) usa la sintaxis '.{}':
 //
 //     .{
 //          .center_x = 15,
@@ -8,12 +8,12 @@
 //          .radius = 6,
 //     }
 //
-// These literals are always evaluated entirely at compile-time.
-// The example above could be coerced into the i32 variant of the
-// "circle struct" from the last exercise.
+// Estos literales siempre se evalúan completamente en tiempo de compilación.
+// El ejemplo anterior podría ser convertido en la variante i32 de la
+// "estructura de círculo" del último ejercicio.
 //
-// Or you can let them remain entirely anonymous as in this
-// example:
+// O puedes dejarlos completamente anónimos como en este
+// ejemplo:
 //
 //     fn bar(foo: anytype) void {
 //         print("a:{} b:{}\n", .{foo.a, foo.b});
@@ -24,7 +24,7 @@
 //         .b = false,
 //     });
 //
-// The example above prints "a:true b:false".
+// El ejemplo anterior imprime "a:true b:false".
 //
 const print = @import("std").debug.print;
 
@@ -38,7 +38,7 @@ pub fn main() void {
 
 // Please complete this function which prints an anonymous struct
 // representing a circle.
-fn printCircle(???) void {
+fn printCircle(circle: anytype) void {
     print("x:{} y:{} radius:{}\n", .{
         circle.center_x,
         circle.center_y,

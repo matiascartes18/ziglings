@@ -1,17 +1,17 @@
 //
-// We were able to get a printable string out of a many-item
-// pointer by using a slice to assert a specific length.
+// Pudimos obtener una cadena imprimible de un puntero de muchos elementos
+// utilizando un slice para afirmar una longitud específica.
 //
-// But can we ever GO BACK to a sentinel-terminated pointer
-// after we've "lost" the sentinel in a coercion?
+// Pero, ¿podemos alguna vez VOLVER a un puntero terminado en centinela
+// después de que hemos "perdido" el centinela en una coerción?
 //
-// Yes, we can. Zig's @ptrCast() builtin can do this. Check out
-// the signature:
+// Sí, podemos. La función incorporada @ptrCast() de Zig puede hacer esto. Mira
+// la firma:
 //
 //     @ptrCast(value: anytype) anytype
 //
-// See if you can use it to solve the same many-item pointer
-// problem, but without needing a length!
+// ¡Ve si puedes usarla para resolver el mismo problema del puntero de muchos elementos,
+// pero sin necesidad de una longitud!
 //
 const print = @import("std").debug.print;
 
@@ -21,7 +21,7 @@ pub fn main() void {
     const data: [*]const u8 = "Weird Data!";
 
     // Please cast 'data' to 'printable':
-    const printable: [*:0]const u8 = ???;
+    const printable: [*:0]const u8 = @ptrCast(data);
 
     print("{s}\n", .{printable});
 }

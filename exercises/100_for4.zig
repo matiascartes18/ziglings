@@ -1,37 +1,36 @@
 //
-// We've seen that the 'for' loop can let us perform some action
-// for every item in an array or slice.
+// Hemos visto que el bucle 'for' nos permite realizar alguna acción
+// para cada elemento en un array o slice.
 //
-// More recently, we discovered that it supports ranges to
-// iterate over number sequences.
+// Más recientemente, descubrimos que soporta rangos para
+// iterar sobre secuencias de números.
 //
-// This is part of a more general capability of the `for` loop:
-// looping over one or more "objects" where an object is an
-// array, slice, or range.
+// Esto es parte de una capacidad más general del bucle `for`:
+// iterar sobre uno o más "objetos" donde un objeto es un
+// array, slice, o rango.
 //
-// In fact, we *did* use multiple objects way back in Exercise
-// 016 where we iterated over an array and also a numeric index.
-// It didn't always work exactly this way, so the exercise had to
-// be retroactively modified a little bit.
+// De hecho, *usamos* múltiples objetos hace mucho tiempo en el Ejercicio
+// 016 donde iteramos sobre un array y también un índice numérico.
+// No siempre funcionó exactamente de esta manera, por lo que el ejercicio tuvo que
+// ser modificada retroactivamente un poco.
 //
 //     for (bits, 0..) |bit, i| { ... }
 //
-// The general form of a 'for' loop with two lists is:
+// La forma general de un bucle 'for' con dos listas es:
 //
 //     for (list_a, list_b) |a, b| {
-//         // Here we have the first item from list_a and list_b,
-//         // then the second item from each, then the third and
-//         // so forth...
+//         // Aquí tenemos el primer elemento de list_a y list_b,
+//         // luego el segundo elemento de cada uno, luego el tercero y
+//         // así sucesivamente...
 //     }
 //
-// What's really beautiful about this is that we don't have to
-// keep track of an index or advancing a memory pointer for
-// *either* of these lists. That error-prone stuff is all taken
-// care of for us by the compiler.
+// Lo realmente hermoso de esto es que no tenemos que
+// llevar la cuenta de un índice o avanzar un puntero de memoria para
+// *ninguna* de estas listas. Ese trabajo propenso a errores es todo realizado
+// por nosotros por el compilador.
 //
-// Below, we have a program that is supposed to compare two
-// arrays. Please make it work!
-//
+// A continuación, tenemos un programa que se supone que compara dos
+// arrays. ¡Por favor, haz que funcione!//
 const std = @import("std");
 const print = std.debug.print;
 
@@ -39,24 +38,22 @@ pub fn main() void {
     const hex_nums = [_]u8{ 0xb, 0x2a, 0x77 };
     const dec_nums = [_]u8{ 11, 42, 119 };
 
-    for (hex_nums, ???) |hn, ???| {
+    for (hex_nums, dec_nums) |hn, dn| {
         if (hn != dn) {
             std.debug.print("Uh oh! Found a mismatch: {d} vs {d}\n", .{ hn, dn });
-            return;
+            break;
         }
-    }
-
-    std.debug.print("Arrays match!\n", .{});
+    } else std.debug.print("Arrays match!\n", .{});
 }
 //
-// You are perhaps wondering what happens if one of the two lists
-// is longer than the other? Try it!
+// Quizás te estés preguntando qué sucede si una de las dos listas
+// es más larga que la otra. ¡Pruébalo!
 //
-// By the way, congratulations for making it to Exercise 100!
+// Por cierto, ¡felicidades por llegar al Ejercicio 100!
 //
 //    +-------------+
-//    | Celebration |
-//    | Area  * * * |
+//    | Área de     |
+//    | Celebración * * * |
 //    +-------------+
 //
-// Please keep your celebrating within the area provided.
+// Por favor, mantén tu celebración dentro del área proporcionada.

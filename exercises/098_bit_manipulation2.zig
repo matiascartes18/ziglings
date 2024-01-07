@@ -1,30 +1,30 @@
 //
-// Another useful practice for bit manipulation is setting bits as flags.
-// This is especially useful when processing lists of something and storing
-// the states of the entries, e.g. a list of numbers and for each prime
-// number a flag is set.
+// Otra práctica útil para la manipulación de bits es establecer bits como banderas.
+// Esto es especialmente útil cuando se procesan listas de algo y se almacenan
+// los estados de las entradas, por ejemplo, una lista de números y para cada número primo
+// se establece una bandera.
 //
-// As an example, let's take the Pangram exercise from Exercism:
+// Como ejemplo, tomemos el ejercicio Pangram de Exercism:
 // https://exercism.org/tracks/zig/exercises/pangram
 //
-// A pangram is a sentence using every letter of the alphabet at least once.
-// It is case insensitive, so it doesn't matter if a letter is lower-case
-// or upper-case. The best known English pangram is:
+// Un pangrama es una frase que usa cada letra del alfabeto al menos una vez.
+// No distingue entre mayúsculas y minúsculas, por lo que no importa si una letra es minúscula
+// o mayúscula. El pangrama en inglés más conocido es:
 //
 //           "The quick brown fox jumps over the lazy dog."
 //
-// There are several ways to select the letters that appear in the pangram
-// (and it doesn't matter if they appear once or several times).
+// Hay varias formas de seleccionar las letras que aparecen en el pangrama
+// (y no importa si aparecen una o varias veces).
 //
-// For example, you could take an array of bool and set the value to 'true'
-// for each letter in the order of the alphabet (a=0; b=1; etc.) found in
-// the sentence. However, this is neither memory efficient nor particularly
-// fast. Instead we take a simpler way, very similar in principle, we define
-// a variable with at least 26 bits (e.g. u32) and also set the bit for each
-// letter found at the corresponding position.
+// Por ejemplo, podrías tomar un array de bool y establecer el valor a 'true'
+// para cada letra en el orden del alfabeto (a=0; b=1; etc.) encontrada en
+// la frase. Sin embargo, esto no es ni eficiente en memoria ni particularmente
+// rápido. En su lugar, tomamos un camino más sencillo, muy similar en principio, definimos
+// una variable con al menos 26 bits (por ejemplo, u32) y también establecemos el bit para cada
+// letra encontrada en la posición correspondiente.
 //
-// Zig provides functions for this in the standard library, but we prefer to
-// solve it without these extras, after all we want to learn something.
+// Zig proporciona funciones para esto en la biblioteca estándar, pero preferimos
+// resolverlo sin estos extras, después de todo queremos aprender algo.
 //
 const std = @import("std");
 const ascii = std.ascii;
@@ -46,13 +46,13 @@ fn isPangram(str: []const u8) bool {
     for (str) |c| {
         // if the character is an alphabetical character
         if (ascii.isASCII(c) and ascii.isAlphabetic(c)) {
-            // then we set the bit at the position
+            // luego establecemos el bit en la posición
             //
-            // to do this, we use a little trick:
-            // since the letters in the ASCI table start at 65
-            // and are numbered sequentially, we simply subtract the
-            // first letter (in this case the 'a') from the character
-            // found, and thus get the position of the desired bit
+            // para hacer esto, usamos un pequeño truco:
+            // dado que las letras en la tabla ASCII comienzan en 65
+            // y están numeradas secuencialmente, simplemente restamos la
+            // primera letra (en este caso, la 'a') del carácter
+            // encontrado, y así obtenemos la posición del bit deseado
             bits |= @as(u32, 1) << @truncate(ascii.toLower(c) - 'a');
         }
     }
@@ -60,5 +60,5 @@ fn isPangram(str: []const u8) bool {
     // and if so, we know the given string is a pangram
     //
     // but what do we have to compare?
-    return bits == 0x..???;
+    return bits == 0x3FFFFFF;
 }

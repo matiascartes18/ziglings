@@ -1,6 +1,5 @@
 //
-// You can even create anonymous struct literals without field
-// names:
+// Incluso puedes crear literales de estructuras anónimas sin nombres de campo:
 //
 //     .{
 //         false,
@@ -8,34 +7,35 @@
 //         @as(f64, 67.12)
 //     }
 //
-// We call these "tuples", which is a term used by many
-// programming languages for a data type with fields referenced
-// by index order rather than name. To make this possible, the Zig
-// compiler automatically assigns numeric field names 0, 1, 2,
-// etc. to the struct.
+// A estos los llamamos "tuplas", que es un término utilizado por muchos
+// lenguajes de programación para un tipo de datos con campos referenciados
+// por orden de índice en lugar de por nombre. Para hacer esto posible, el compilador Zig
+// asigna automáticamente nombres de campo numéricos 0, 1, 2,
+// etc. a la estructura.
 //
-// Since bare numbers are not legal identifiers (foo.0 is a
-// syntax error), we have to quote them with the @"" syntax.
-// Example:
+// Dado que los números desnudos no son identificadores legales (foo.0 es un
+// error de sintaxis), tenemos que citarlos con la sintaxis @"".
+// Ejemplo:
 //
 //     const foo = .{ true, false };
 //
 //     print("{} {}\n", .{foo.@"0", foo.@"1"});
 //
-// The example above prints "true false".
+// El ejemplo anterior imprime "true false".
 //
-// Hey, WAIT A SECOND...
+// Espera, UN SEGUNDO...
 //
-// If a .{} thing is what the print function wants, do we need to
-// break our "tuple" apart and put it in another one? No! It's
-// redundant! This will print the same thing:
+// Si una cosa .{} es lo que la función print quiere, ¿necesitamos
+// descomponer nuestra "tupla" y ponerla en otra? ¡No! ¡Es
+// redundante! Esto imprimirá lo mismo:
 //
 //     print("{} {}\n", foo);
 //
-// Aha! So now we know that print() takes a "tuple". Things are
-// really starting to come together now.
+// ¡Aha! Así que ahora sabemos que print() toma una "tupla". Las cosas están
+// realmente empezando a unirse ahora.
 //
 const print = @import("std").debug.print;
+const std = @import("std");
 
 pub fn main() void {
     // A "tuple":
@@ -82,14 +82,14 @@ fn printTuple(tuple: anytype) void {
     //         @typeInfo(Circle).Struct.fields
     //
     // This will be an array of StructFields.
-    const fields = ???;
+    const fields = @typeInfo(@TypeOf(tuple)).Struct.fields;
 
     // 2. Loop through each field. This must be done at compile
     // time.
     //
     //     Hint: remember 'inline' loops?
     //
-    for (fields) |field| {
+    inline for (fields) |field| {
         // 3. Print the field's name, type, and value.
         //
         //     Each 'field' in this loop is one of these:
@@ -117,9 +117,9 @@ fn printTuple(tuple: anytype) void {
         //
         // The first field should print as: "0"(bool):true
         print("\"{s}\"({any}):{any} ", .{
-            field.???,
-            field.???,
-            ???,
+            field.name,
+            field.type,
+            @field(tuple, field.name),
         });
     }
 }

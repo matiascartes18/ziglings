@@ -1,21 +1,20 @@
 //
-// In most of the examples so far, the inputs are known at compile
-// time, thus the amount of memory used by the program is fixed.
-// However, if responding to input whose size is not known at compile
-// time, such as:
-//  - user input via command-line arguments
-//  - inputs from another program
+// En la mayoría de los ejemplos hasta ahora, las entradas se conocen en tiempo de compilación,
+// por lo tanto, la cantidad de memoria utilizada por el programa es fija.
+// Sin embargo, si se responde a una entrada cuyo tamaño no se conoce en tiempo de compilación,
+// como:
+//  - entrada del usuario a través de argumentos de línea de comandos
+//  - entradas de otro programa
 //
-// You'll need to request memory for your program to be allocated by
-// your operating system at runtime.
+// Necesitarás solicitar memoria para que tu programa sea asignado por
+// tu sistema operativo en tiempo de ejecución.
 //
-// Zig provides several different allocators. In the Zig
-// documentation, it recommends the Arena allocator for simple
-// programs which allocate once and then exit:
+// Zig proporciona varios asignadores diferentes. En la documentación de Zig,
+// se recomienda el asignador Arena para programas simples que asignan una vez y luego salen:
 //
 //     const std = @import("std");
 //
-//     // memory allocation can fail, so the return type is !void
+//     // la asignación de memoria puede fallar, por lo que el tipo de retorno es !void
 //     pub fn main() !void {
 //
 //         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
@@ -30,13 +29,13 @@
 //         std.debug.print("slice_ptr={*}\n", .{slice_ptr});
 //     }
 
-// Instead of a simple integer or a constant sized slice, this
-// program requires a slice to be allocated that is the same size as
-// an input array.
+// En lugar de un simple entero o una porción de tamaño constante, este
+// programa requiere que se asigne una porción que tenga el mismo tamaño que
+// una matriz de entrada.
 
-// Given a series of numbers, take the running average. In other
-// words, each item N should contain the average of the last N
-// elements.
+// Dada una serie de números, toma el promedio acumulativo. En otras
+// palabras, cada elemento N debe contener el promedio de los últimos N
+// elementos.
 
 const std = @import("std");
 
@@ -64,7 +63,7 @@ pub fn main() !void {
     const allocator = arena.allocator();
 
     // allocate memory for this array
-    const avg: []f64 = ???;
+    const avg: []f64 = try allocator.alloc(f64, arr.len);
 
     runningAverage(arr, avg);
     std.debug.print("Running Average: ", .{});

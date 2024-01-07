@@ -1,38 +1,38 @@
 //
-// A big advantage of Zig is the integration of its own test system.
-// This allows the philosophy of Test Driven Development (TDD) to be
-// implemented perfectly. Zig even goes one step further than other
-// languages, the tests can be included directly in the source file.
+// Una gran ventaja de Zig es la integración de su propio sistema de pruebas.
+// Esto permite que la filosofía del Desarrollo Guiado por Pruebas (TDD) se pueda
+// implementar perfectamente. Zig incluso va un paso más allá que otros
+// lenguajes, las pruebas se pueden incluir directamente en el archivo fuente.
 //
-// This has several advantages. On the one hand it is much clearer to
-// have everything in one file, both the source code and the associated
-// test code. On the other hand, it is much easier for third parties
-// to understand what exactly a function is supposed to do if they can
-// simply look at the test inside the source and compare both.
+// Esto tiene varias ventajas. Por un lado, es mucho más claro tener
+// todo en un solo archivo, tanto el código fuente como el código de prueba asociado.
+// Por otro lado, es mucho más fácil para terceros entender qué se supone
+// que debe hacer exactamente una función si pueden simplemente mirar la prueba
+// dentro del código fuente y comparar ambos.
 //
-// Especially if you want to understand how e.g. the standard library
-// of Zig works, this approach is very helpful. Furthermore it is very
-// practical, if you want to report a bug to the Zig community, to
-// illustrate it with a small example including a test.
+// Especialmente si quieres entender cómo funciona, por ejemplo, la biblioteca estándar
+// de Zig, este enfoque es muy útil. Además, es muy práctico, si quieres
+// reportar un error a la comunidad de Zig, ilustrarlo con un pequeño ejemplo
+// que incluya una prueba.
 //
-// Therefore, in this exercise we will deal with the basics of testing
-// in Zig. Basically, tests work as follows: you pass certain parameters
-// to a function, for which you get a return - the result. This is then
-// compared with the EXPECTED value. If both values match, the test is
-// passed, otherwise an error message is displayed.
+// Por lo tanto, en este ejercicio nos ocuparemos de los fundamentos de las pruebas
+// en Zig. Básicamente, las pruebas funcionan de la siguiente manera: pasas ciertos parámetros
+// a una función, para la cual obtienes un retorno - el resultado. Esto se compara
+// con el valor ESPERADO. Si ambos valores coinciden, la prueba se pasa,
+// de lo contrario se muestra un mensaje de error.
 //
 //          testing.expect(foo(param1, param2) == expected);
 //
-// Also other comparisons are possible, deviations or also errors can
-// be provoked, which must lead to an appropriate behavior of the
-// function, so that the test is passed.
+// También son posibles otras comparaciones, se pueden provocar desviaciones o errores,
+// los cuales deben llevar a un comportamiento apropiado de la función,
+// para que la prueba se pase.
 //
-// Tests can be run via Zig build system or applied directly to
-// individual modules using "zig test xyz.zig".
+// Las pruebas se pueden ejecutar a través del sistema de construcción de Zig o aplicarse directamente a
+// módulos individuales usando "zig test xyz.zig".
 //
-// Both can be used script-driven to execute tests automatically, e.g.
-// after checking into a Git repository. Something we also make extensive
-// use of here at Ziglings.
+// Ambos se pueden usar de forma scriptada para ejecutar pruebas automáticamente, por ejemplo,
+// después de hacer un commit en un repositorio Git. Algo que también usamos extensivamente
+// aquí en Ziglings.
 //
 const std = @import("std");
 const testing = std.testing;
@@ -83,7 +83,7 @@ fn sub(a: f16, b: f16) f16 {
 // an error that you need
 // to correct.
 test "sub" {
-    try testing.expect(sub(10, 5) == 6);
+    try testing.expect(sub(11, 5) == 6);
 
     try testing.expect(sub(3, 1.5) == 1.5);
 }
@@ -104,9 +104,10 @@ test "divide" {
     try testing.expect(divide(-1, -1) catch unreachable == 1);
     try testing.expect(divide(10, 2) catch unreachable == 5);
     try testing.expect(divide(1, 3) catch unreachable == 0.3333333333333333);
+    try testing.expect(try divide(5, 5) == 1);
 
     // Now we test if the function returns an error
     // if we pass a zero as denominator.
     // But which error needs to be tested?
-    try testing.expectError(error.???, divide(15, 0));
+    try testing.expectError(error.DivisionByZero, divide(15, 0));
 }
